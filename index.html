@@ -1310,6 +1310,28 @@ img, iframe, video, svg { max-width: 100%; }
                 <button type="button" class="login-btn" id="btnLoginUser" onclick="loginUser()">
                     <i class="fas fa-sign-in-alt"></i> Acessar a plataforma
                 </button>
+                <p style="text-align:center;margin-top:14px;">
+                    <a href="#" onclick="abrirRecuperarSenha();return false;" style="font-size:13px;color:var(--turquesa);text-decoration:none;font-weight:500;">Esqueci minha senha</a>
+                </p>
+            </div>
+
+            <!-- Formulário de recuperação de senha -->
+            <div class="login-form" id="form-recuperar" style="display:none;">
+                <div class="login-error" id="error-recuperar"><i class="fas fa-exclamation-circle"></i> <span></span></div>
+                <div class="login-success" id="success-recuperar"><i class="fas fa-check-circle"></i> <span></span></div>
+                <p style="font-size:13.5px;color:var(--texto-leve);line-height:1.6;margin-bottom:16px;">Informe seu e-mail corporativo. Enviaremos um link para você criar uma nova senha.</p>
+                <div class="form-group">
+                    <label>SEU E-MAIL CORPORATIVO</label>
+                    <input type="email" id="recuperarEmailInput" placeholder="Ex: joao.silva@canopus.com.br"
+                        onkeypress="if(event.key==='Enter')enviarRecuperacaoSenha()"
+                        autocomplete="email">
+                </div>
+                <button type="button" class="login-btn" id="btnRecuperar" onclick="enviarRecuperacaoSenha()">
+                    <i class="fas fa-paper-plane"></i> Enviar link de recuperação
+                </button>
+                <p style="text-align:center;margin-top:14px;">
+                    <a href="#" onclick="voltarParaLogin();return false;" style="font-size:13px;color:var(--cinza);text-decoration:none;"><i class="fas fa-arrow-left" style="margin-right:4px;"></i>Voltar para o login</a>
+                </p>
             </div>
 
             <div class="login-footer">
@@ -1362,7 +1384,7 @@ img, iframe, video, svg { max-width: 100%; }
                 <i class="fas fa-question-circle"></i> FAQ
             </div>
             <div class="nav-item" data-page="administradoras" onclick="navigateTo('administradoras')">
-                <i class="fas fa-building"></i> Administradoras
+                <i class="fas fa-building"></i> Empreendimentos
             </div>
             <!-- 5 Estrelas: só para avaliados -->
             <div class="nav-item" id="nav-cinco-estrelas" data-page="cinco-estrelas" onclick="navigateTo('cinco-estrelas')" style="display:none;">
@@ -1397,11 +1419,14 @@ img, iframe, video, svg { max-width: 100%; }
             <div class="nav-item" data-page="avaliador-5e" onclick="navigateTo('avaliador-5e')">
                 <i class="fas fa-star"></i> Lançar Notas 5 Estrelas
             </div>
+            <div class="nav-item" data-page="respostas-faq" onclick="navigateTo('respostas-faq')">
+                <i class="fas fa-question-circle"></i> FAQ
+            </div>
+            <div class="nav-item" data-page="administradoras" onclick="navigateTo('administradoras')">
+                <i class="fas fa-building"></i> Empreendimentos
+            </div>
             <div class="nav-item" data-page="trilha-onboarding" onclick="navigateTo('trilha-onboarding')">
                 <i class="fas fa-compass"></i> Onboarding Relacionamento
-            </div>
-            <div class="nav-item" data-page="faq" onclick="navigateTo('faq')">
-                <i class="fas fa-question-circle"></i> FAQ
             </div>
         </div>
 
@@ -1661,15 +1686,13 @@ img, iframe, video, svg { max-width: 100%; }
             <!-- ZONA NOVA: Avisos do mural — dados reais da tabela avisos -->
             <div id="dashAvisos" style="display:none;margin-bottom:20px;max-width:860px;"></div>
 
-            <!-- ZONA 4: Conquistas — secundária, colapsável -->
-            <div style="margin-top:8px;border-top:1px solid var(--borda);padding-top:16px;">
-                <button onclick="toggleConquistasDash()" aria-expanded="false" aria-controls="achievementsWrap" id="conquistasToggle"
-                    style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;width:100%;text-align:left;">
+            <!-- ZONA 4: Conquistas — sempre visíveis -->
+            <div id="secaoConquistas" style="margin-top:8px;border-top:1px solid var(--borda);padding-top:16px;">
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 0 12px;">
                     <i class="fas fa-trophy" style="color:var(--turquesa);font-size:14px;" aria-hidden="true"></i>
                     <span style="font-size:13px;font-weight:700;color:var(--azul-escuro);">Minhas conquistas</span>
-                    <i class="fas fa-chevron-down" id="conquistasChevron" style="color:var(--cinza);font-size:11px;margin-left:auto;transition:transform .2s;" aria-hidden="true"></i>
-                </button>
-                <div id="achievementsWrap" style="display:none;padding-top:12px;">
+                </div>
+                <div id="achievementsWrap">
                     <div id="achievementsContainer"></div>
                 </div>
             </div>
@@ -2335,7 +2358,7 @@ img, iframe, video, svg { max-width: 100%; }
                 <!-- Painel: Administradoras -->
                 <div class="cm-panel" id="cm-panel-adm" style="display:none;">
                     <h3><i class="fas fa-building" style="color:var(--turquesa);margin-right:8px;"></i>Cadastrar Administradora</h3>
-                    <p style="color:var(--cinza);font-size:13px;margin-bottom:20px;">Cadastre a ficha completa de cada empreendimento: administradora, síndico e financiamento.</p>
+                    <p style="color:var(--cinza);font-size:13px;margin-bottom:20px;">Cadastre a ficha completa de cada empreendimento: administradora, síndico(s) e financiamento.</p>
 
                     <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
                         <div class="form-group">
@@ -2355,22 +2378,12 @@ img, iframe, video, svg { max-width: 100%; }
                         <i class="fas fa-plus"></i> Adicionar outro contato
                     </button>
 
-                    <!-- Seção: Síndico -->
-                    <div style="font-size:11px;font-weight:700;color:var(--turquesa);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 10px;"><i class="fas fa-user-tie" style="margin-right:6px;"></i>Síndico(a)</div>
-                    <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;">
-                        <div class="form-group">
-                            <label>Nome</label>
-                            <input type="text" id="admSindicoNome" placeholder="Nome do síndico(a)">
-                        </div>
-                        <div class="form-group">
-                            <label>Telefone</label>
-                            <input type="text" id="admSindicoTel" placeholder="(00) 00000-0000">
-                        </div>
-                        <div class="form-group">
-                            <label>E-mail</label>
-                            <input type="text" id="admSindicoEmail" placeholder="email@exemplo.com">
-                        </div>
-                    </div>
+                    <!-- Seção: Síndico(a) — múltiplos -->
+                    <div style="font-size:11px;font-weight:700;color:var(--turquesa);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 10px;"><i class="fas fa-user-tie" style="margin-right:6px;"></i>Síndico(s) / Subsíndico(s)</div>
+                    <div id="admSindicos"></div>
+                    <button class="btn btn-secondary" onclick="admAddSindico()" style="margin-bottom:24px;">
+                        <i class="fas fa-plus"></i> Adicionar síndico(a)
+                    </button>
 
                     <!-- Seção: Financiamento -->
                     <div style="font-size:11px;font-weight:700;color:var(--turquesa);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 10px;"><i class="fas fa-landmark" style="margin-right:6px;"></i>Financiamento</div>
@@ -2695,8 +2708,8 @@ img, iframe, video, svg { max-width: 100%; }
         <div class="page-section" id="page-administradoras">
             <div class="page-header">
                 <span class="badge"><i class="fas fa-building"></i> Consulta rápida</span>
-                <h1>Administradoras de Condomínio</h1>
-                <p>Contato da administradora de cada empreendimento — para passar ao cliente na hora.</p>
+                <h1>Empreendimentos</h1>
+                <p>Ficha completa de cada empreendimento: administradora, síndico e financiamento.</p>
             </div>
             <div style="max-width:1100px;">
                 <div style="position:relative;margin-bottom:20px;">
@@ -2767,6 +2780,8 @@ img, iframe, video, svg { max-width: 100%; }
                 <a href="mailto:suporte@canopus.com.br" style="color:var(--cinza);text-decoration:none;"><i class="fas fa-envelope" style="margin-right:4px;" aria-hidden="true"></i>Suporte TI</a>
                 <span style="color:var(--borda);margin:0 8px;">|</span>
                 <a href="#" onclick="showAboutModal()" style="color:var(--cinza);text-decoration:none;"><i class="fas fa-info-circle" style="margin-right:4px;" aria-hidden="true"></i>Sobre</a>
+                <span style="color:var(--borda);margin:0 8px;">|</span>
+                <a href="#" onclick="diagnosticarSistema()" style="color:var(--cinza);text-decoration:none;"><i class="fas fa-stethoscope" style="margin-right:4px;" aria-hidden="true"></i>Diagnóstico</a>
             </p>
         </div>
     </footer>
@@ -2793,6 +2808,7 @@ let allUsers = [];
 document.addEventListener('DOMContentLoaded', async function() {
     loadTheme();
     initSupabase();
+    verificarRecuperacaoAtiva();
     await checkAuthState();
     setupEventListeners();
     setupDragDrop();
@@ -2826,6 +2842,110 @@ function reenableBtn(type) {
 /**
  * AUTENTICAÇÃO SEGURA: Valida as credenciais com o Supabase Auth
  */
+// ==================== RECUPERAÇÃO DE SENHA ====================
+// Usa o fluxo nativo e seguro do Supabase: envia link ao e-mail do próprio
+// colaborador, que cria a nova senha sozinho. A plataforma nunca vê a senha.
+
+function abrirRecuperarSenha() {
+    document.getElementById('form-user').classList.remove('active');
+    document.getElementById('form-user').style.display = 'none';
+    var fr = document.getElementById('form-recuperar');
+    fr.style.display = 'block';
+    fr.classList.add('active');
+    // Copia o e-mail já digitado, se houver
+    var emailLogin = document.getElementById('userEmailInput').value.trim();
+    if (emailLogin) document.getElementById('recuperarEmailInput').value = emailLogin;
+    document.getElementById('recuperarEmailInput').focus();
+}
+
+function voltarParaLogin() {
+    var fr = document.getElementById('form-recuperar');
+    fr.style.display = 'none';
+    fr.classList.remove('active');
+    var fu = document.getElementById('form-user');
+    fu.style.display = 'block';
+    fu.classList.add('active');
+    // Limpa mensagens
+    document.getElementById('error-recuperar').classList.remove('show');
+    document.getElementById('success-recuperar').classList.remove('show');
+}
+
+async function enviarRecuperacaoSenha() {
+    var email = document.getElementById('recuperarEmailInput').value.trim().toLowerCase();
+    var errEl = document.getElementById('error-recuperar');
+    var okEl = document.getElementById('success-recuperar');
+    var btn = document.getElementById('btnRecuperar');
+    errEl.classList.remove('show');
+    okEl.classList.remove('show');
+
+    // Validação
+    if (!email || !email.endsWith(CONFIG.ALLOWED_DOMAIN)) {
+        errEl.querySelector('span').textContent = 'Informe um e-mail @canopus.com.br válido.';
+        errEl.classList.add('show');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+    try {
+        if (!supabaseClient) throw new Error('Sem conexão com o servidor.');
+        // O link volta para a própria plataforma, onde o colaborador define a nova senha
+        var redirectUrl = window.location.origin + window.location.pathname;
+        var res = await supabaseClient.auth.resetPasswordForEmail(email, {
+            redirectTo: redirectUrl
+        });
+        if (res.error) throw res.error;
+
+        okEl.querySelector('span').textContent = 'Link enviado! Verifique seu e-mail (inclusive a caixa de spam) e siga as instruções para criar uma nova senha.';
+        okEl.classList.add('show');
+        btn.innerHTML = '<i class="fas fa-check"></i> Link enviado';
+        setTimeout(function(){ btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar link de recuperação'; }, 4000);
+    } catch(e) {
+        // Por segurança, não revela se o e-mail existe ou não
+        errEl.querySelector('span').textContent = 'Não foi possível enviar agora. Tente novamente em alguns minutos ou contate o Suporte TI.';
+        errEl.classList.add('show');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar link de recuperação';
+    }
+}
+
+// Detecta quando o colaborador volta pelo link de recuperação e mostra o campo de nova senha
+async function verificarRecuperacaoAtiva() {
+    try {
+        var hash = window.location.hash || '';
+        if (hash.indexOf('type=recovery') !== -1) {
+            // Aguarda o Supabase processar o token do link
+            setTimeout(mostrarDefinirNovaSenha, 500);
+        }
+    } catch(e) {}
+}
+
+function mostrarDefinirNovaSenha() {
+    var nova = prompt('Você está redefinindo sua senha.\n\nDigite sua NOVA senha (mínimo 8 caracteres):');
+    if (nova === null) return;
+    if (!nova || nova.length < 8) {
+        alert('A senha precisa ter no mínimo 8 caracteres. Tente novamente.');
+        mostrarDefinirNovaSenha();
+        return;
+    }
+    var conf = prompt('Confirme a nova senha:');
+    if (conf !== nova) {
+        alert('As senhas não coincidem. Tente novamente.');
+        mostrarDefinirNovaSenha();
+        return;
+    }
+    supabaseClient.auth.updateUser({ password: nova }).then(function(res) {
+        if (res.error) {
+            alert('Não foi possível atualizar a senha: ' + res.error.message);
+        } else {
+            alert('Senha atualizada com sucesso! Você já pode acessar a plataforma.');
+            window.location.hash = '';
+            window.location.reload();
+        }
+    });
+}
+
 async function loginUser() {
     // 1. Captura os campos de e-mail e senha do formulário do site
     const emailInput = document.getElementById('txtEmail') || document.getElementById('userEmailInput');
@@ -3309,9 +3429,9 @@ function navigateTo(page) {
     // Avaliador: perfil exclusivo de avaliação. Só pode acessar a tela de
     // lançamento e o próprio perfil; qualquer outra página é bloqueada.
     if (currentRole === 'avaliador') {
-        const avaliadorPermitido = ['avaliador-5e', 'user-profile'];
-        if (!avaliadorPermitido.includes(page)) {
-            showNotification('Seu perfil tem acesso apenas à área de avaliação.', 'warning');
+        const avaliadorPermitido = ['avaliador-5e', 'user-profile', 'respostas-faq', 'faq', 'consultar-respostas', 'administradoras', 'trilha-onboarding', 'dashboard'];
+        if (!avaliadorPermitido.includes(page) && !page.startsWith('mod-')) {
+            showNotification('Este item não está disponível no seu perfil.', 'warning');
             return;
         }
     }
@@ -3602,14 +3722,14 @@ function updateDashboard() {
         }
         var z3 = document.getElementById('dashboard-zona3');
         if (z3) z3.innerHTML = '';
-        // Esconde a seção de conquistas inteira para não-colaborador
-        var conqToggle = document.getElementById('conquistasToggle');
-        if (conqToggle && conqToggle.parentElement) conqToggle.parentElement.style.display = 'none';
+        // Esconde a seção de conquistas para não-colaborador
+        var secConq = document.getElementById('secaoConquistas');
+        if (secConq) secConq.style.display = 'none';
         return;
     }
-    // Colaborador: garante que a seção de conquistas está visível
-    var conqToggle2 = document.getElementById('conquistasToggle');
-    if (conqToggle2 && conqToggle2.parentElement) conqToggle2.parentElement.style.display = '';
+    // Colaborador: seção de conquistas sempre visível
+    var secConq2 = document.getElementById('secaoConquistas');
+    if (secConq2) secConq2.style.display = '';
 
     // Calcular progresso real do Onboarding
     var onboardingMods = ['mod-onboarding-1','mod-onboarding-2','mod-onboarding-3','mod-onboarding-4'];
@@ -4612,6 +4732,69 @@ function coletarContatos() {
     return contatos;
 }
 
+// ── Síndicos: cada um tem cargo, nome e vários contatos ──
+function admAddSindico(sindico) {
+    var cont = document.getElementById('admSindicos');
+    if (!cont) return;
+    sindico = sindico || {};
+    var bloco = document.createElement('div');
+    bloco.className = 'adm-sindico-bloco';
+    bloco.style.cssText = 'border:1.5px solid var(--borda);border-radius:12px;padding:14px;margin-bottom:12px;background:var(--cinza-claro);';
+    bloco.innerHTML =
+        '<div style="display:grid;grid-template-columns:150px 1fr auto;gap:8px;margin-bottom:10px;align-items:center;">'
+        + '<select class="sind-cargo" style="height:42px;padding:0 10px;border:1.5px solid var(--borda);border-radius:8px;font-size:13px;background:var(--branco);color:var(--texto);">'
+        + '<option value="Síndico(a)"' + (sindico.cargo==='Síndico(a)'?' selected':'') + '>Síndico(a)</option>'
+        + '<option value="Subsíndico(a)"' + (sindico.cargo==='Subsíndico(a)'?' selected':'') + '>Subsíndico(a)</option>'
+        + '<option value="Conselheiro(a)"' + (sindico.cargo==='Conselheiro(a)'?' selected':'') + '>Conselheiro(a)</option>'
+        + '</select>'
+        + '<input type="text" class="sind-nome" placeholder="Nome" value="' + (sindico.nome?escapeHtml(sindico.nome):'') + '" style="height:42px;padding:0 12px;border:1.5px solid var(--borda);border-radius:8px;font-size:13px;background:var(--branco);color:var(--texto);">'
+        + '<button onclick="this.closest(\'.adm-sindico-bloco\').remove()" style="width:42px;height:42px;border:1.5px solid var(--borda);border-radius:8px;background:var(--branco);color:#DC2626;cursor:pointer;" aria-label="Remover síndico" title="Remover síndico"><i class="fas fa-trash-alt"></i></button>'
+        + '</div>'
+        + '<div class="sind-contatos"></div>'
+        + '<button onclick="sindAddContato(this)" class="btn btn-secondary" style="font-size:12px;padding:6px 12px;"><i class="fas fa-plus"></i> Contato</button>';
+    cont.appendChild(bloco);
+    // Adiciona os contatos existentes, ou uma linha vazia
+    var contatosDiv = bloco.querySelector('.sind-contatos');
+    var cts = sindico.contatos && sindico.contatos.length ? sindico.contatos : [{}];
+    cts.forEach(function(c){ sindAddContatoLinha(contatosDiv, c.tipo, c.valor); });
+}
+
+function sindAddContato(btn) {
+    var contatosDiv = btn.previousElementSibling;
+    sindAddContatoLinha(contatosDiv);
+}
+
+function sindAddContatoLinha(contatosDiv, tipo, valor) {
+    var linha = document.createElement('div');
+    linha.className = 'sind-contato-linha';
+    linha.style.cssText = 'display:grid;grid-template-columns:120px 1fr auto;gap:8px;margin-bottom:8px;align-items:center;';
+    linha.innerHTML =
+        '<select class="sind-ct-tipo" style="height:38px;padding:0 8px;border:1.5px solid var(--borda);border-radius:8px;font-size:12px;background:var(--branco);color:var(--texto);">'
+        + '<option value="telefone"' + (tipo==='telefone'?' selected':'') + '>Telefone</option>'
+        + '<option value="email"' + (tipo==='email'?' selected':'') + '>E-mail</option>'
+        + '<option value="whatsapp"' + (tipo==='whatsapp'?' selected':'') + '>WhatsApp</option>'
+        + '</select>'
+        + '<input type="text" class="sind-ct-valor" placeholder="Contato..." value="' + (valor?escapeHtml(valor):'') + '" style="height:38px;padding:0 10px;border:1.5px solid var(--borda);border-radius:8px;font-size:12px;background:var(--branco);color:var(--texto);">'
+        + '<button onclick="this.parentElement.remove()" style="width:38px;height:38px;border:1.5px solid var(--borda);border-radius:8px;background:var(--branco);color:#DC2626;cursor:pointer;" aria-label="Remover"><i class="fas fa-times"></i></button>';
+    contatosDiv.appendChild(linha);
+}
+
+function coletarSindicos() {
+    var sindicos = [];
+    document.querySelectorAll('#admSindicos .adm-sindico-bloco').forEach(function(bloco) {
+        var nome = bloco.querySelector('.sind-nome').value.trim();
+        if (!nome) return;
+        var cargo = bloco.querySelector('.sind-cargo').value;
+        var contatos = [];
+        bloco.querySelectorAll('.sind-contato-linha').forEach(function(l) {
+            var v = l.querySelector('.sind-ct-valor').value.trim();
+            if (v) contatos.push({ tipo: l.querySelector('.sind-ct-tipo').value, valor: v });
+        });
+        sindicos.push({ cargo: cargo, nome: nome, contatos: contatos });
+    });
+    return sindicos;
+}
+
 async function salvarAdministradora() {
     var emp = document.getElementById('admEmpreendimento').value.trim();
     var nome = document.getElementById('admNome').value.trim();
@@ -4632,9 +4815,7 @@ async function salvarAdministradora() {
             telefone: primTel,
             email: primEmail,
             contatos: contatos,
-            sindico_nome: document.getElementById('admSindicoNome').value.trim() || null,
-            sindico_telefone: document.getElementById('admSindicoTel').value.trim() || null,
-            sindico_email: document.getElementById('admSindicoEmail').value.trim() || null,
+            sindicos: coletarSindicos(),
             banco_financiador: document.getElementById('admBanco').value.trim() || null,
             assessoria: document.getElementById('admAssessoria').value.trim() || null,
             atualizado_em: new Date().toISOString()
@@ -4661,7 +4842,8 @@ function resetAdmForm() {
     document.getElementById('admEmpreendimento').dataset.editId = '';
     document.getElementById('admNome').value = '';
     document.getElementById('admContatos').innerHTML = '';
-    ['admSindicoNome','admSindicoTel','admSindicoEmail','admBanco','admAssessoria'].forEach(function(id){
+    document.getElementById('admSindicos').innerHTML = '';
+    ['admBanco','admAssessoria'].forEach(function(id){
         var el = document.getElementById(id); if (el) el.value = '';
     });
     admAddContatoLinha();
@@ -4712,10 +4894,17 @@ function editarAdministradora(jsonStr) {
         : [].concat(a.telefone ? [{tipo:'telefone',valor:a.telefone}] : [], a.email ? [{tipo:'email',valor:a.email}] : []);
     if (!contatos.length) admAddContatoLinha();
     else contatos.forEach(function(c){ admAddContatoLinha(c.tipo, c.valor); });
-    // Preenche síndico e financiamento
-    document.getElementById('admSindicoNome').value = a.sindico_nome || '';
-    document.getElementById('admSindicoTel').value = a.sindico_telefone || '';
-    document.getElementById('admSindicoEmail').value = a.sindico_email || '';
+    // Síndicos: usa o array novo, ou migra os campos antigos
+    document.getElementById('admSindicos').innerHTML = '';
+    var sinds = a.sindicos && a.sindicos.length ? a.sindicos : [];
+    if (!sinds.length && a.sindico_nome) {
+        // Migra o síndico único antigo para o novo formato
+        var ctsAntigos = [];
+        if (a.sindico_telefone) ctsAntigos.push({tipo:'telefone',valor:a.sindico_telefone});
+        if (a.sindico_email) ctsAntigos.push({tipo:'email',valor:a.sindico_email});
+        sinds = [{ cargo:'Síndico(a)', nome:a.sindico_nome, contatos:ctsAntigos }];
+    }
+    sinds.forEach(function(s){ admAddSindico(s); });
     document.getElementById('admBanco').value = a.banco_financiador || '';
     document.getElementById('admAssessoria').value = a.assessoria || '';
     var btn = document.querySelector('#cm-panel-adm .btn-primary');
@@ -5124,7 +5313,7 @@ function buildSearchIndex() {
     if (window._admCache && window._admCache.length) {
         window._admCache.forEach(function(a) {
             idx.push({
-                tipo: 'Administradoras',
+                tipo: 'Empreendimentos',
                 target: 'administradoras',
                 title: a.empreendimento || '',
                 sub: a.administradora || 'Administradora',
@@ -5175,18 +5364,6 @@ function focusTopbarSearch() {
 }
 
 // Toggle da seção de conquistas no dashboard (colapsável — hierarquia secundária)
-function toggleConquistasDash() {
-    var wrap = document.getElementById('achievementsWrap');
-    var chev = document.getElementById('conquistasChevron');
-    var btn  = document.getElementById('conquistasToggle');
-    if (!wrap) return;
-    var aberto = wrap.style.display !== 'none';
-    wrap.style.display = aberto ? 'none' : 'block';
-    if (chev) chev.style.transform = aberto ? 'rotate(0deg)' : 'rotate(180deg)';
-    if (btn) btn.setAttribute('aria-expanded', String(!aberto));
-    if (!aberto && typeof checkAchievements === 'function') checkAchievements();
-}
-
 // ==================== DASHBOARD INTELIGENTE ====================
 
 // Saudação contextual com nome e data — sem dado inventado
@@ -5314,8 +5491,22 @@ async function carregarAdministradoras() {
         var res = await supabaseClient.from('administradoras')
             .select('*').order('empreendimento', { ascending: true });
         loading.style.display = 'none';
-        if (res.error || !res.data || !res.data.length) {
-            if (empty) empty.style.display = 'block';
+        if (res.error) {
+            // Erro real (permissão/RLS/conexão) — NÃO é lista vazia
+            if (empty) {
+                empty.style.display = 'block';
+                empty.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#F59E0B;"></i>'
+                    + '<h3>Não foi possível carregar</h3>'
+                    + '<p>Houve um erro ao acessar os dados. Isso costuma ser permissão de acesso.<br>'
+                    + '<button onclick="diagnosticarSistema()" style="margin-top:12px;padding:8px 16px;background:var(--turquesa);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;">Executar diagnóstico</button></p>';
+            }
+            return;
+        }
+        if (!res.data || !res.data.length) {
+            if (empty) {
+                empty.style.display = 'block';
+                empty.innerHTML = '<i class="fas fa-building"></i><h3>Nenhuma administradora cadastrada</h3><p>Os contatos das administradoras serão adicionados pelo administrador.</p>';
+            }
             return;
         }
         window._admCache = res.data;
@@ -5357,7 +5548,8 @@ function renderAdministradoras(dados) {
         var contatos = (a.contatos && a.contatos.length) ? a.contatos
             : [].concat(a.telefone ? [{tipo:'telefone',valor:a.telefone}] : [], a.email ? [{tipo:'email',valor:a.email}] : []);
 
-        var buscaTxt = normalizeText((a.empreendimento||'') + ' ' + (a.administradora||'') + ' ' + contatos.map(function(c){return c.valor;}).join(' ') + ' ' + (a.sindico_nome||'') + ' ' + (a.banco_financiador||'') + ' ' + (a.assessoria||''));
+        var sindNomes = (a.sindicos && a.sindicos.length ? a.sindicos.map(function(s){return s.nome;}).join(' ') : (a.sindico_nome||''));
+        var buscaTxt = normalizeText((a.empreendimento||'') + ' ' + (a.administradora||'') + ' ' + contatos.map(function(c){return c.valor;}).join(' ') + ' ' + sindNomes + ' ' + (a.banco_financiador||'') + ' ' + (a.assessoria||''));
 
         // Helper: linha de contato (valor + botão copiar individual)
         function linhaContato(icone, iconeCls, rotulo, valor) {
@@ -5409,12 +5601,25 @@ function renderAdministradoras(dados) {
             });
         }
 
-        // SEÇÃO 2: Síndico(a)
-        if (a.sindico_nome || a.sindico_telefone || a.sindico_email) {
-            html += tituloSecao('fa-user-tie', 'Síndico(a)');
-            if (a.sindico_nome)     html += linhaContato('fa-user', 'fas', 'Nome', a.sindico_nome);
-            if (a.sindico_telefone) html += linhaContato('fa-phone', 'fas', 'Telefone', a.sindico_telefone);
-            if (a.sindico_email)    html += linhaContato('fa-envelope', 'fas', 'E-mail', a.sindico_email);
+        // SEÇÃO 2: Síndico(s) — suporta múltiplos + fallback do formato antigo
+        var sindicos = a.sindicos && a.sindicos.length ? a.sindicos : [];
+        if (!sindicos.length && a.sindico_nome) {
+            var ctsAnt = [];
+            if (a.sindico_telefone) ctsAnt.push({tipo:'telefone',valor:a.sindico_telefone});
+            if (a.sindico_email) ctsAnt.push({tipo:'email',valor:a.sindico_email});
+            sindicos = [{ cargo:'Síndico(a)', nome:a.sindico_nome, contatos:ctsAnt }];
+        }
+        if (sindicos.length) {
+            html += tituloSecao('fa-user-tie', sindicos.length > 1 ? 'Síndicos' : 'Síndico(a)');
+            sindicos.forEach(function(s) {
+                html += '<div style="font-size:12px;font-weight:700;color:var(--azul-escuro);margin:4px 0 6px;">' + escapeHtml(s.nome) + ' <span style="font-weight:500;color:var(--cinza);">· ' + escapeHtml(s.cargo || 'Síndico(a)') + '</span></div>';
+                (s.contatos || []).forEach(function(c) {
+                    var ic = c.tipo === 'email' ? 'fa-envelope' : c.tipo === 'whatsapp' ? 'fa-whatsapp' : 'fa-phone';
+                    var icCls = c.tipo === 'whatsapp' ? 'fab' : 'fas';
+                    var rot = c.tipo === 'email' ? 'E-mail' : c.tipo === 'whatsapp' ? 'WhatsApp' : 'Telefone';
+                    html += linhaContato(ic, icCls, rot, c.valor);
+                });
+            });
         }
 
         // SEÇÃO 3: Financiamento
@@ -5429,10 +5634,11 @@ function renderAdministradoras(dados) {
         linhasCopia.push((a.empreendimento||'').replace(/\s*\[TESTE\]/gi,''));
         linhasCopia.push('Administradora: ' + (a.administradora||''));
         contatos.forEach(function(c){ linhasCopia.push('  ' + c.valor); });
-        if (a.sindico_nome || a.sindico_telefone || a.sindico_email) {
-            linhasCopia.push('Síndico(a): ' + (a.sindico_nome||''));
-            if (a.sindico_telefone) linhasCopia.push('  Tel: ' + a.sindico_telefone);
-            if (a.sindico_email) linhasCopia.push('  E-mail: ' + a.sindico_email);
+        if (sindicos.length) {
+            sindicos.forEach(function(s) {
+                linhasCopia.push((s.cargo || 'Síndico(a)') + ': ' + (s.nome||''));
+                (s.contatos||[]).forEach(function(c){ linhasCopia.push('  ' + c.valor); });
+            });
         }
         if (a.banco_financiador) linhasCopia.push('Banco: ' + a.banco_financiador);
         if (a.assessoria) linhasCopia.push('Assessoria: ' + a.assessoria);
@@ -5611,7 +5817,7 @@ function runSearch(query, origem) {
         });
         // Casos operacionais recebem bônus — são a fonte primária de resposta
         if (item.tipo === 'Perguntas Frequentes') score += 3;
-        if (item.tipo === 'Administradoras') score += 4; // referência exata tem prioridade máxima
+        if (item.tipo === 'Empreendimentos') score += 4; // referência exata tem prioridade máxima
         scored.push({ item: item, score: score });
     });
 
@@ -5641,7 +5847,7 @@ function runSearch(query, origem) {
             html += '<div class="search-result-group">' + grupo + '</div>';
         }
         // Casos operacionais: mostrar prévia da resposta diretamente no resultado
-        if ((r.item.tipo === 'Perguntas Frequentes' || r.item.tipo === 'Administradoras') && r.item.resposta) {
+        if ((r.item.tipo === 'Perguntas Frequentes' || r.item.tipo === 'Empreendimentos') && r.item.resposta) {
             var previaResp = r.item.resposta.replace(/&[a-z0-9#]+;/gi, ' ').substring(0, 100);
             html += '<div class="search-result-item' + (i === 0 ? ' active' : '') + '" data-target="' + escapeHtml(r.item.target) + '" onclick="openSearchResult(this.dataset.target)" style="flex-direction:column;align-items:flex-start;padding:12px 16px;gap:6px;">'
                   + '<div style="display:flex;align-items:center;gap:8px;width:100%;">'
@@ -5650,7 +5856,7 @@ function runSearch(query, origem) {
                   + '<div class="sr-sub">' + escapeHtml(r.item.sub) + '</div></div>'
                   + '</div>'
                   + '<div style="font-size:12px;color:var(--texto-leve);background:var(--turquesa)12;border-left:3px solid var(--turquesa);padding:7px 10px;border-radius:0 6px 6px 0;line-height:1.5;width:100%;box-sizing:border-box;">'
-                  + '<span style="font-size:10px;font-weight:700;color:var(--turquesa);display:block;margin-bottom:2px;">' + (r.item.tipo === 'Administradoras' ? 'CONTATO:' : 'RESPOSTA:') + '</span>'
+                  + '<span style="font-size:10px;font-weight:700;color:var(--turquesa);display:block;margin-bottom:2px;">' + (r.item.tipo === 'Empreendimentos' ? 'CONTATO:' : 'RESPOSTA:') + '</span>'
                   + escapeHtml(previaResp) + (r.item.resposta.length > 100 ? '...' : '')
                   + '</div>'
                   + '</div>';
@@ -5762,6 +5968,61 @@ function loadTheme() {
 // toggleNotifications: versão completa definida abaixo
 
 // ==================== MODALS ====================
+
+// ==================== AUTODIAGNÓSTICO DO SISTEMA ====================
+// Testa acesso a cada tabela e mostra o que falha para o usuário atual.
+// Uso: chamar diagnosticarSistema() no console, ou via atalho.
+async function diagnosticarSistema() {
+    var linhas = [];
+    function add(nome, ok, detalhe) {
+        linhas.push({ nome: nome, ok: ok, detalhe: detalhe || '' });
+    }
+
+    // Sessão
+    add('Usuário logado', !!currentUser, currentUser ? (currentUser.email + ' · perfil: ' + currentRole) : 'ninguém logado');
+    add('Cliente Supabase', !!supabaseClient, supabaseClient ? 'conectado' : 'NÃO inicializado');
+
+    if (supabaseClient) {
+        try {
+            var s = await supabaseClient.auth.getSession();
+            add('Sessão Supabase válida', !!(s && s.data && s.data.session), (s && s.data && s.data.session) ? 'autenticado no banco' : 'SEM sessão — RLS vai bloquear tudo');
+        } catch(e) { add('Sessão Supabase válida', false, e.message); }
+
+        // Testa cada tabela
+        var tabelas = ['administradoras','faq','avisos','profiles','avaliacoes_mensais','consultas_realizadas'];
+        for (var i = 0; i < tabelas.length; i++) {
+            var t = tabelas[i];
+            try {
+                var r = await supabaseClient.from(t).select('*').limit(3);
+                if (r.error) add('Tabela ' + t, false, r.error.message + (r.error.code ? ' [' + r.error.code + ']' : ''));
+                else add('Tabela ' + t, true, (r.data ? r.data.length : 0) + ' registro(s) lido(s)');
+            } catch(e) { add('Tabela ' + t, false, e.message); }
+        }
+    }
+
+    // Monta o modal
+    var rows = linhas.map(function(l) {
+        var cor = l.ok ? '#059669' : '#DC2626';
+        var icone = l.ok ? 'fa-check-circle' : 'fa-times-circle';
+        return '<tr style="border-bottom:1px solid var(--borda);">'
+            + '<td style="padding:8px 12px;"><i class="fas ' + icone + '" style="color:' + cor + ';"></i></td>'
+            + '<td style="padding:8px 12px;font-weight:600;color:var(--azul-escuro);">' + l.nome + '</td>'
+            + '<td style="padding:8px 12px;font-size:12px;color:var(--texto-leve);">' + escapeHtml(l.detalhe) + '</td>'
+            + '</tr>';
+    }).join('');
+
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,30,40,.8);z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;';
+    ov.innerHTML = '<div style="background:#fff;border-radius:16px;max-width:600px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">'
+        + '<h2 style="font-size:18px;color:var(--azul-escuro);margin:0;"><i class="fas fa-stethoscope" style="color:var(--turquesa);margin-right:8px;"></i>Diagnóstico do Sistema</h2>'
+        + '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="border:none;background:none;font-size:20px;cursor:pointer;color:var(--cinza);">&times;</button>'
+        + '</div>'
+        + '<p style="font-size:13px;color:var(--cinza);margin-bottom:16px;">Tire um print desta tela e envie ao suporte se algo aparecer em vermelho.</p>'
+        + '<table style="width:100%;border-collapse:collapse;font-size:13px;">' + rows + '</table>'
+        + '</div>';
+    document.body.appendChild(ov);
+}
 
 function showAboutModal() {
     showNotification('Farol Relacionamento — Conhecimento e Excelência no Atendimento', 'info');
