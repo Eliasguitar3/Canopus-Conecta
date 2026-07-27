@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>Farol Relacionamento — Conhecimento e Excelência no Atendimento</title>
+<title>[TESTE] Farol Relacionamento — Canopus</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1169,6 +1169,20 @@ body, .dashboard-card, .card, .media-card, .faq-section, .pdf-section,
     .faixa-cards-grid { grid-template-columns:1fr; gap:10px; }
 }
 
+
+/* ==================== BANNER AMBIENTE DE TESTE ==================== */
+#bannerTeste {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 99999;
+    background: repeating-linear-gradient(45deg,#F59E0B,#F59E0B 12px,#D97706 12px,#D97706 24px);
+    color: #fff; text-align: center; padding: 7px 12px;
+    font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 700;
+    letter-spacing: .04em; text-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+body { padding-top: 32px !important; }
+.sidebar { top: 32px !important; height: calc(100vh - 32px) !important; }
+.top-bar { top: 32px !important; }
+.login-screen { padding-top: 32px; }
+
 /* ==================== BUSCA MOBILE EXPANSÍVEL ==================== */
 @media (max-width: 768px) {
     #mobileSearchBtn { display: flex !important; }
@@ -1271,6 +1285,7 @@ img, iframe, video, svg { max-width: 100%; }
 <!-- base target removido -->
 </head>
 <body>
+<div id="bannerTeste">⚠️ AMBIENTE DE TESTE — os dados aqui não são reais e podem ser apagados a qualquer momento</div>
 <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Abrir menu de navegação"><i class="fas fa-bars" aria-hidden="true"></i></button>
 <div class="overlay" onclick="toggleSidebar()"></div>
 
@@ -2774,7 +2789,7 @@ img, iframe, video, svg { max-width: 100%; }
 <footer class="site-footer" style="padding:16px 32px;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
             <p style="font-size:12px;color:var(--cinza);margin:0;">
-                Farol Relacionamento <span id="footerVersao" style="font-weight:600;">v2.0</span> &middot; &copy; 2026 Canopus Construtora
+                Farol Relacionamento <span id="footerVersao" style="font-weight:600;">v2.0 · AMBIENTE DE TESTE</span> &middot; &copy; 2026 Canopus Construtora
             </p>
             <p style="font-size:12px;margin:0;">
                 <a href="mailto:suporte@canopus.com.br" style="color:var(--cinza);text-decoration:none;"><i class="fas fa-envelope" style="margin-right:4px;" aria-hidden="true"></i>Suporte TI</a>
@@ -9758,9 +9773,12 @@ function recordLogin() {
 // ==================== SUPABASE CONFIGURATION ====================
 // IMPORTANTE: Substitua pelos valores reais do seu projeto Supabase
 // Obtenha em: Supabase Dashboard > Project Settings > API
+// ⚠️ AMBIENTE DE TESTE — aponta para um projeto Supabase SEPARADO.
+// Substitua os dois valores abaixo pelos do projeto "farol-teste":
+//   Supabase → Project Settings → API → Project URL e anon public key
 const SUPABASE_CONFIG = {
-    URL: 'https://pvorwgrpkcofoukbqtyg.supabase.co',
-    ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2b3J3Z3Jwa2NvZm91a2JxdHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjU2MjcsImV4cCI6MjA5NTMwMTYyN30._7nMPDUYbFRqhODAsAwVH-GqOkDEZ02p1nsgXXf9B_Q',
+    URL: 'https://tfqttlkvkwbvjynyrvfd.supabase.co',
+    ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmcXR0bGt2a3didmp5bnlydmZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxNTQxMTYsImV4cCI6MjEwMDczMDExNn0.X27OsSnxboxL3xQ4ziSMk1vHEentRHwsBUU1rvpEWq4',
     BUCKET_NAME: 'materiais'
 };
 
