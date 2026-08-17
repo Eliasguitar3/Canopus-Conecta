@@ -6464,7 +6464,7 @@ function runSearch(query, origem) {
         box.innerHTML = '<div class="search-empty" style="padding:16px;text-align:center;color:var(--cinza);font-size:13px;">'
             + '<svg class="ico" style="margin-right:6px" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg>Nenhum resultado direto para "' + escapeHtml(query) + '".'
             + '<div style="margin-top:12px;">'
-            + '<button onclick="perguntarAoFarol(this.dataset.q)" data-q="' + escapeHtml(query) + '" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:linear-gradient(135deg,var(--turquesa),var(--azul-medio));color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:\'Inter\',sans-serif;">'
+            + '<button onclick="event.stopPropagation();perguntarAoFarol(this.dataset.q)" data-q="' + escapeHtml(query) + '" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:linear-gradient(135deg,var(--turquesa),var(--azul-medio));color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:\'Inter\',sans-serif;">'
             + '✨ Perguntar ao Farol</button>'
             + '<div style="font-size:11px;color:var(--cinza);margin-top:8px;">O assistente lê toda a base de casos e compõe uma resposta</div>'
             + '</div></div>';
@@ -6505,7 +6505,7 @@ function runSearch(query, origem) {
     });
     // Rodapé: opção de perguntar à IA mesmo com resultados
     html += '<div style="border-top:1px solid var(--borda);padding:10px 16px;">'
-        + '<button onclick="perguntarAoFarol(this.dataset.q)" data-q="' + escapeHtml(query) + '" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;font-size:12.5px;color:var(--turquesa-texto);font-weight:600;font-family:\'Inter\',sans-serif;padding:4px 0;">'
+        + '<button onclick="event.stopPropagation();perguntarAoFarol(this.dataset.q)" data-q="' + escapeHtml(query) + '" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;font-size:12.5px;color:var(--turquesa-texto);font-weight:600;font-family:\'Inter\',sans-serif;padding:4px 0;">'
         + '✨ Não achou? Perguntar ao Farol</button>'
         + '</div>';
     box.innerHTML = html;
@@ -6583,7 +6583,13 @@ function searchKeydown(ev) {
 
 
 document.addEventListener('click', function(e) {
-    if (!e.target.closest('.search-box')) closeSearchResults();
+    // A busca do Dashboard não tem a classe .search-box (só a da topbar tem) —
+    // sem checar #dashboardSearchResults também, qualquer clique dentro do
+    // dropdown (como o botão "Perguntar ao Farol") contava como "clique fora"
+    // e apagava a caixa no mesmo instante em que a resposta ia aparecer.
+    if (!e.target.closest('.search-box') && !e.target.closest('#dashboardSearchResults') && !e.target.closest('#dashboardSearchInput')) {
+        closeSearchResults();
+    }
 });
 
 // ==================== THEME ====================
