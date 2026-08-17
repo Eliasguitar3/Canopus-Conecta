@@ -6341,7 +6341,7 @@ async function perguntarAoFarol(pergunta) {
 
     box.innerHTML = '<div style="padding:20px;display:flex;align-items:center;gap:12px;">'
         + '<svg class="ico ico-spin" style="color:var(--turquesa);font-size:18px;" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke-opacity="0.25"/><path d="M20 12a8 8 0 0 0-8-8"/></svg>'
-        + '<span style="font-size:13.5px;color:var(--texto-leve);">O assistente do Farol está consultando a base de conhecimento (e a internet, se precisar)...</span>'
+        + '<span style="font-size:13.5px;color:var(--texto-leve);">O assistente do Farol está consultando a base de conhecimento...</span>'
         + '</div>';
     box.style.display = 'block';
     box.classList.add('show');
@@ -6355,29 +6355,14 @@ async function perguntarAoFarol(pergunta) {
         if (res.error) throw new Error(res.error.message || 'Erro na função');
         var resposta = res.data && res.data.resposta;
         if (!resposta) throw new Error((res.data && res.data.error) || 'Resposta vazia');
-        var fontes = res.data && res.data.fontes;
-
-        var htmlFontes = '';
-        if (fontes && fontes.length) {
-            htmlFontes = '<div style="margin:12px 20px 0;padding-top:12px;border-top:1px solid var(--borda);">'
-                + '<div style="font-size:10.5px;font-weight:700;color:var(--texto-leve);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;display:flex;align-items:center;gap:6px;">'
-                + svgIcon('fa-globe', '', 'style="width:12px;height:12px;"') + 'Pesquisado na internet — fontes'
-                + '</div>'
-                + '<div style="display:flex;flex-direction:column;gap:5px;">'
-                + fontes.slice(0, 5).map(function(f) {
-                    return '<a href="' + escapeHtml(f.url) + '" target="_blank" rel="noopener" style="font-size:12px;color:var(--turquesa-texto);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">' + escapeHtml(f.titulo) + '</a>';
-                }).join('')
-                + '</div></div>';
-        }
 
         box.innerHTML = '<div style="padding:0;">'
             + '<div style="display:flex;align-items:center;gap:10px;padding:14px 20px;background:linear-gradient(135deg,var(--turquesa),var(--azul-medio));border-radius:12px 12px 0 0;">'
             + '<div style="width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + svgIcon('fa-lightbulb', '', 'style="width:17px;height:17px;color:#fff;"') + '</div>'
             + '<div><div style="font-size:13.5px;font-weight:700;color:#fff;">Assistente do Farol</div>'
-            + '<div style="font-size:10.5px;color:rgba(255,255,255,.82);text-transform:uppercase;letter-spacing:.04em;">Resposta gerada por IA' + (fontes && fontes.length ? ' · com busca na internet' : '') + '</div></div>'
+            + '<div style="font-size:10.5px;color:rgba(255,255,255,.82);text-transform:uppercase;letter-spacing:.04em;">Resposta gerada por IA</div></div>'
             + '</div>'
             + '<div style="padding:18px 20px 4px;">' + formatarRespostaFarol(resposta) + '</div>'
-            + htmlFontes
             + '<div style="font-size:11px;color:var(--cinza);margin:12px 20px 0;padding-top:12px;border-top:1px solid var(--borda);">'
             + 'Resposta gerada com base nos casos e FAQ do Farol. Em situações críticas, confirme com sua coordenadora.'
             + '</div>'
