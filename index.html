@@ -6347,26 +6347,33 @@ async function perguntarAoFarol(pergunta) {
     box.classList.add('show');
 
     try {
-        if (!supabaseClient) throw new Error('Sem conexão com o Supabase (supabaseClient não inicializado).');
+        if (!supabaseClient) throw { categoria: 'rede', friendly: 'O assistente está temporariamente indisponível. Use os resultados da busca ou consulte os casos de atendimento.', detalhe: 'Sem conexão com o Supabase (supabaseClient não inicializado).' };
         var res = await supabaseClient.functions.invoke('pergunte-ao-farol', {
             body: { pergunta: pergunta, base: montarBaseConhecimento() }
         });
 
         if (res.error) {
             // A lib do Supabase costuma devolver só "Edge Function returned a
-            // non-2xx status code", sem o texto real que a função mandou —
-            // tenta ler o corpo de verdade pra mostrar o erro específico.
-            var msgDetalhada = res.error.message || 'Erro na função';
+            // non-2xx status code", sem o corpo real que a função mandou —
+            // lê o corpo de verdade pra pegar a categoria e a mensagem certa.
+            var corpoErro = null;
             if (res.error.context && typeof res.error.context.json === 'function') {
-                try {
-                    var corpoErro = await res.error.context.clone().json();
-                    if (corpoErro && corpoErro.error) msgDetalhada = corpoErro.error;
-                } catch(_e) { /* corpo não era JSON — mantém a mensagem genérica */ }
+                try { corpoErro = await res.error.context.clone().json(); } catch(_e) { /* corpo não era JSON */ }
             }
-            throw new Error(msgDetalhada);
+            throw {
+                categoria: (corpoErro && corpoErro.categoria) || 'desconhecido',
+                friendly: (corpoErro && corpoErro.error) || 'O assistente está temporariamente indisponível. Use os resultados da busca ou consulte os casos de atendimento.',
+                detalhe: (corpoErro && corpoErro.detalhe) || res.error.message || 'Erro na função (sem detalhe).'
+            };
         }
         var resposta = res.data && res.data.resposta;
-        if (!resposta) throw new Error((res.data && res.data.error) || 'Resposta vazia (a função respondeu OK mas sem texto).');
+        if (!resposta) {
+            throw {
+                categoria: (res.data && res.data.categoria) || 'desconhecido',
+                friendly: (res.data && res.data.error) || 'O assistente não conseguiu gerar uma resposta.',
+                detalhe: (res.data && res.data.detalhe) || 'Resposta vazia (a função respondeu OK mas sem texto).'
+            };
+        }
 
         box.innerHTML = '<div style="padding:0;">'
             + '<div style="display:flex;align-items:center;gap:10px;padding:14px 20px;background:linear-gradient(135deg,var(--turquesa),var(--azul-medio));border-radius:12px 12px 0 0;">'
@@ -6384,16 +6391,20 @@ async function perguntarAoFarol(pergunta) {
         // Registra a consulta com IA
         registrarConsultaIA(pergunta);
     } catch(e) {
-        var detalhe = (e && e.message) ? e.message : 'Erro desconhecido';
+        // Mensagem amigável e categorizada na tela; o texto técnico completo
+        // (categoria + detalhe) vai só pro console — quem precisa investigar
+        // abre o DevTools, o usuário final só vê o texto amigável.
+        var categoria = e && e.categoria || 'desconhecido';
+        var friendly = (e && e.friendly) || 'O assistente inteligente ainda não está disponível. Use os resultados da busca ou consulte os casos de atendimento.';
+        var detalhe = (e && e.detalhe) || (e && e.message) || 'Erro desconhecido';
+
         box.innerHTML = '<div style="padding:18px 20px;">'
             + '<div style="font-size:13px;color:var(--texto-leve);line-height:1.6;">'
             + '<svg class="ico" style="color:var(--cinza);margin-right:6px;" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="8" r="0.6" fill="currentColor" stroke="none"/></svg>'
-            + 'O assistente inteligente ainda não está disponível. '
-            + 'Use os resultados da busca ou consulte os <a href="#" onclick="clearSearchAll();navigateTo(\'respostas-faq\');return false;" style="color:var(--turquesa-texto);font-weight:600;">casos de atendimento</a>.'
-            + '</div>'
-            + '<div style="margin-top:10px;padding:8px 10px;background:var(--cinza-claro);border-radius:6px;font-size:11px;font-family:monospace;color:var(--cinza);word-break:break-word;">Detalhe técnico: ' + escapeHtml(detalhe) + '</div>'
-            + '</div>';
-        console.warn('[Pergunte ao Farol]', e.message);
+            + escapeHtml(friendly)
+            + ' Consulte os <a href="#" onclick="clearSearchAll();navigateTo(\'respostas-faq\');return false;" style="color:var(--turquesa-texto);font-weight:600;">casos de atendimento</a> enquanto isso.'
+            + '</div></div>';
+        console.error('[Pergunte ao Farol][' + categoria + ']', detalhe);
     }
 }
 
