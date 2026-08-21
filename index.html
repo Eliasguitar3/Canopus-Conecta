@@ -6431,17 +6431,33 @@ async function perguntarAoFarol(pergunta) {
 // está recebendo o feedback.
 async function registrarConsultaIA(pergunta) {
     try {
-        if (!supabaseClient || !currentUser) return null;
+        if (!supabaseClient || !currentUser) { console.warn('[Farol][feedback] sem supabaseClient ou currentUser'); return null; }
         var sess = await supabaseClient.auth.getSession();
-        if (!sess || !sess.data || !sess.data.session) return null;
+        if (!sess || !sess.data || !sess.data.session) { console.warn('[Farol][feedback] sem sessão ativa'); return null; }
         var res = await supabaseClient.from('consultas_realizadas').insert({
             colaborador_id: sess.data.session.user.id,
             termo_buscado: pergunta,
             resultado_alvo: 'IA_FAROL',
             consultado_em: new Date().toISOString()
         }).select('id').single();
-        return (res.data && res.data.id) || null;
-    } catch(e) { return null; }
+        if (res.error) {
+            // Causa mais provável: falta permissão de LEITURA (SELECT) na
+            // tabela consultas_realizadas — hoje ela só tinha permissão de
+            // escrita (INSERT). Sem poder ler de volta a linha que acabou
+            // de salvar, não tem como saber o id pra ligar o botão de
+            // feedback a essa consulta específica.
+            console.warn('[Farol][feedback] insert/select falhou:', res.error.message, res.error);
+            return null;
+        }
+        if (!res.data || !res.data.id) {
+            console.warn('[Farol][feedback] salvou mas não veio id de volta:', res);
+            return null;
+        }
+        return res.data.id;
+    } catch(e) {
+        console.warn('[Farol][feedback] exceção:', e && e.message);
+        return null;
+    }
 }
 
 // Salva o 👍/👎 na mesma linha da consulta original. "Fire-and-forget" —
