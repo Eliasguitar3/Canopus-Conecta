@@ -6265,9 +6265,11 @@ function filtrarFaqCategoria(cat, btnEl) {
 function montarBaseConhecimento() {
     var partes = [];
     // FAQ do Supabase — a base única de conhecimento
+    // Rótulo usa o texto da própria pergunta (não só um número), pra virar uma
+    // citação legível de verdade quando o Gemini referenciar a fonte.
     if (window._faqCache && window._faqCache.length) {
-        window._faqCache.forEach(function(f, i) {
-            partes.push('FAQ ' + (i+1) + '\nPergunta: ' + f.pergunta + '\nResposta: ' + f.resposta);
+        window._faqCache.forEach(function(f) {
+            partes.push('FAQ: ' + (f.pergunta || '(sem título)') + '\nResposta: ' + f.resposta);
         });
     }
     // Administradoras — referência de contatos
@@ -6311,6 +6313,7 @@ function formatarRespostaFarol(texto) {
         var mHeading = linha.match(/^##\s+(.*)/);
         var mOrdered = linha.match(/^(\d+)[.)]\s+(.*)/);
         var mBullet = linha.match(/^[-•]\s+(.*)/);
+        var mFonte = linha.match(/^Fonte:\s*(.*)/i);
         if (mHeading) {
             fecharLista();
             html += '<div style="display:flex;align-items:center;gap:8px;margin:' + (primeiraSecao ? '0' : '20px') + ' 0 10px;' + (primeiraSecao ? '' : 'padding-top:16px;border-top:1px solid var(--borda);') + '">'
@@ -6318,6 +6321,11 @@ function formatarRespostaFarol(texto) {
                 + '<span style="font-size:12px;font-weight:700;color:var(--azul-escuro);text-transform:uppercase;letter-spacing:.04em;">' + escapeHtml(mHeading[1]) + '</span>'
                 + '</div>';
             primeiraSecao = false;
+        } else if (mFonte) {
+            fecharLista();
+            html += '<div style="display:flex;align-items:center;gap:6px;margin:10px 0 0;padding-top:10px;border-top:1px dashed var(--borda);font-size:12px;color:var(--texto-leve);font-style:italic;">'
+                + svgIcon('fa-circle-check', '', 'style="width:13px;height:13px;flex-shrink:0;color:var(--turquesa-texto);"')
+                + '<span>Fonte: ' + escapeHtml(mFonte[1]) + '</span></div>';
         } else if (mOrdered) {
             if (listaAberta !== 'ol') { fecharLista(); html += '<ol style="margin:0 0 6px;padding-left:0;list-style:none;counter-reset:passo;display:flex;flex-direction:column;gap:12px;">'; listaAberta = 'ol'; }
             html += '<li style="counter-increment:passo;display:flex;gap:10px;font-size:14px;color:var(--azul-escuro);line-height:1.7;">'
