@@ -19,6 +19,15 @@
     --texto-leve: #5a6b7c; --borda: #e2e8f0;
     --sombra: 0 4px 20px rgba(0,60,80,0.08); --sombra-hover: 0 8px 30px rgba(0,60,80,0.15);
     --sombra-2: 0 2px 8px rgba(0,60,80,0.08), 0 8px 24px rgba(0,60,80,0.10);
+    /* Profundidade sutil: sombra em duas camadas (contato + difusa) + brilho interno no topo,
+       simulando luz vindo de cima. Usado em cards, botão primário e item de menu ativo. */
+    --sombra-elev: 0 1px 2px rgba(0,60,80,0.06), 0 8px 20px rgba(0,60,80,0.10);
+    --sombra-elev-hover: 0 2px 4px rgba(0,60,80,0.08), 0 12px 28px rgba(0,60,80,0.16);
+    --brilho-topo: inset 0 1px 0 rgba(255,255,255,0.35);
+    --gradiente-turquesa: linear-gradient(180deg, #22cabc, var(--turquesa-texto));
+    --sombra-turquesa: 0 3px 8px rgba(13,132,122,0.4), inset 0 1px 0 rgba(255,255,255,0.35);
+    --sombra-input: inset 0 1px 3px rgba(0,60,80,0.06);
+    --sombra-input-focus: 0 0 0 3px rgba(29,188,176,0.15), 0 2px 6px rgba(0,60,80,0.08);
     --radius: 16px; --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     /* Escala de espaçamento única — todo o arquivo usa estas variáveis (aliases antigos removidos) */
@@ -69,8 +78,8 @@ input, textarea, select { font-size: 16px; }
 .login-form.active { display: block; animation: fadeIn 0.3s ease; }
 .form-group { margin-bottom: 16px; text-align: left; }
 .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--azul-escuro); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; border: 1.5px solid var(--borda); border-radius: var(--radius-sm); font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: var(--transition); background: var(--cinza-claro); }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--turquesa); background: white; box-shadow: 0 0 0 3px rgba(29,188,176,0.15); }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; border: 1.5px solid var(--borda); border-radius: var(--radius-sm); font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: var(--transition); background: var(--cinza-claro); box-shadow: var(--sombra-input); }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--turquesa); background: white; box-shadow: var(--sombra-input-focus); }
 .form-group input::placeholder, .form-group textarea::placeholder { color: var(--cinza); }
 .form-group input.error { border-color: var(--cor-erro); background: #fef2f2; }
 
@@ -80,7 +89,8 @@ input, textarea, select { font-size: 16px; }
 @keyframes icoSpin { to { transform: rotate(360deg); } }
 .ico-spin { animation: icoSpin 0.8s linear infinite; }
 .field-label { display: block; font-size: 12px; font-weight: 600; color: var(--texto-leve); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
-.field-input { width: 100%; padding: 11px 13px; border: 1.5px solid var(--borda); border-radius: 10px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--azul-escuro); }
+.field-input { width: 100%; padding: 11px 13px; border: 1.5px solid var(--borda); border-radius: 10px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--azul-escuro); box-shadow: var(--sombra-input); }
+.field-input:focus { outline: none; border-color: var(--turquesa); box-shadow: var(--sombra-input-focus); }
 /* Meus Dados + Alterar Senha lado a lado em telas largas (item 2 da revisão de design) */
 .profile-forms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: start; }
 @media (max-width: 900px) { .profile-forms-grid { grid-template-columns: 1fr; } }
@@ -178,13 +188,16 @@ input, textarea, select { font-size: 16px; }
 .logout-btn:hover { background: rgba(220,38,38,0.2); color: #fca5a5; border-color: rgba(220,38,38,0.3); }
 .sidebar-nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 16px 12px; -webkit-overflow-scrolling: touch; }
 .sidebar-nav::-webkit-scrollbar { width: 4px; }
-.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(29,188,176,0.35); border-radius: 4px; }
+.sidebar-nav::-webkit-scrollbar-thumb:hover { background: rgba(29,188,176,0.55); }
+.sidebar-nav { scrollbar-width: thin; scrollbar-color: rgba(29,188,176,0.35) transparent; }
 .nav-section { margin-bottom: 8px; }
 .nav-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.4); padding: 12px 16px 8px; }
 .nav-item { display: flex; align-items: center; padding: 12px 16px; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; margin-bottom: var(--space-1); position: relative; }
 .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
 .nav-item:focus-visible { outline: 2px solid var(--turquesa); outline-offset: -2px; background: rgba(255,255,255,0.08); color: white; }
-.nav-item.active { background: var(--turquesa-texto); color: white; box-shadow: 0 4px 15px rgba(29,188,176,0.3); }
+.nav-item.active { background: var(--gradiente-turquesa); color: white; box-shadow: 0 4px 15px rgba(29,188,176,0.3), var(--brilho-topo); }
 .nav-item i { width: 24px; margin-right: 12px; font-size: 15px; text-align: center; }
 .nav-icon, .footer-icon, .toggle-icon { flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .nav-icon { width: 18px; height: 18px; margin-right: 12px; }
@@ -204,6 +217,40 @@ input, textarea, select { font-size: 16px; }
 .sidebar-footer a:hover { background: rgba(255,255,255,0.08); color: white; }
 .sidebar-footer a i { width: 20px; margin-right: 10px; font-size: 12px; }
 
+/* AJUSTE DA SIDEBAR POR ALTURA DE TELA — o problema do notebook não é a largura, é a
+   altura disponível. Em telas mais baixas, compacta logo/cartão do usuário/itens do menu
+   progressivamente, para o menu inteiro caber sem precisar da barra de rolagem interna
+   (que continua existindo como rede de segurança em telas muito baixas). */
+@media (max-height: 820px) {
+    .sidebar-header { padding: 14px 20px; }
+    .sidebar-logo { width: 44px; height: 44px; margin-bottom: 8px; }
+    .sidebar-logo svg { width: 32px !important; height: 32px !important; }
+    .sidebar-title { font-size: 15px; }
+    .sidebar-subtitle { font-size: 10px; margin-top: 2px; }
+    .user-info { padding: 8px 16px; margin: 8px 12px 0; }
+    .sidebar-avatar { width: 40px; height: 40px; margin-bottom: 6px; }
+    .logout-btn { padding: 6px; margin-top: 6px; }
+    .sidebar-nav { padding: 10px 12px; }
+    .nav-section { margin-bottom: 4px; }
+    .nav-section-title { padding: 8px 16px 4px; }
+    .nav-item { padding: 9px 16px; font-size: 13px; }
+    .sidebar-footer { padding: 8px 16px; }
+    .sidebar-footer a { padding: 6px 12px; font-size: 12px; }
+}
+@media (max-height: 680px) {
+    .sidebar-header { padding: 10px 20px; }
+    .sidebar-logo { width: 36px; height: 36px; margin-bottom: 6px; }
+    .sidebar-logo svg { width: 26px !important; height: 26px !important; }
+    .sidebar-title { font-size: 13px; }
+    .sidebar-subtitle { display: none; }
+    .user-info { padding: 6px 16px; margin: 6px 12px 0; }
+    .sidebar-avatar { width: 32px; height: 32px; margin-bottom: 4px; }
+    .user-info .user-email { display: none; }
+    .logout-btn { padding: 5px; font-size: 10px; }
+    .nav-item { padding: 7px 16px; font-size: 12.5px; }
+    .sidebar-footer a { padding: 5px 12px; font-size: 11px; }
+}
+
 /* MAIN */
 .main-content { margin-left: 280px; min-height: 100vh; min-height: 100dvh; transition: var(--transition); width: calc(100vw - 280px); max-width: calc(100vw - 280px); overflow-x: hidden; box-sizing: border-box; }
 
@@ -217,7 +264,8 @@ input, textarea, select { font-size: 16px; }
 .search-box input { width: 280px; padding: 10px 16px 10px 40px; border: 1px solid var(--borda); border-radius: 50px; background: white; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: var(--transition); }
 .search-box input:focus { border-color: var(--turquesa); box-shadow: 0 0 0 3px rgba(29,188,176,0.15); }
 .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--cinza); font-size: 13px; }
-.top-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--borda); background: white; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--texto-leve); transition: var(--transition); font-size: 14px; }
+.top-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--borda); background: white; box-shadow: 0 1px 2px rgba(0,60,80,0.06); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--texto-leve); transition: var(--transition); font-size: 14px; }
+.top-btn:hover { box-shadow: 0 3px 8px rgba(0,60,80,0.12); }
 .top-btn:hover { background: var(--turquesa-light); border-color: var(--turquesa); color: var(--turquesa); }
 .user-menu-btn { width: auto; height: 40px; }
 #userMenuPanel a:hover { background: var(--cinza-claro); }
@@ -263,8 +311,9 @@ input, textarea, select { font-size: 16px; }
 .dashboard-card .card-label { font-size: 13px; color: var(--texto-leve); }
 
 /* CARDS GRID */
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 20px; margin-bottom: 32px; align-items: stretch; grid-auto-rows: 1fr; }
-.card { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--sombra); transition: var(--transition); cursor: pointer; border: 1px solid transparent; position: relative; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 20px; margin-bottom: 32px; align-items: stretch; grid-auto-rows: 1fr; }
+.card { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--sombra-elev); transition: var(--transition); cursor: pointer; border: 1px solid transparent; position: relative; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
+.card:hover { box-shadow: var(--sombra-elev-hover); }
 .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--turquesa), var(--azul-medio)); opacity: 0; transition: opacity 0.3s; }
 .card:hover { transform: translateY(-4px); box-shadow: var(--sombra-hover); border-color: var(--turquesa); }
 .card:hover::before { opacity: 1; }
@@ -387,8 +436,8 @@ input, textarea, select { font-size: 16px; }
 .hero-stat { text-align: center; }
 .hero-stat .number { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: var(--turquesa); }
 .hero-stat .label { font-size: 12px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
-.hero-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--turquesa-texto); color: white; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; transition: var(--transition); border: none; cursor: pointer; }
-.hero-btn:hover { background: var(--turquesa-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(29,188,176,0.4); }
+.hero-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--gradiente-turquesa); box-shadow: var(--sombra-turquesa); color: white; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; transition: var(--transition); border: none; cursor: pointer; }
+.hero-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(29,188,176,0.4), var(--brilho-topo); }
 
 /* PROGRESS */
 .progress-track { background: white; border-radius: var(--radius); padding: 28px 32px; box-shadow: var(--sombra); margin-bottom: 24px; }
@@ -439,8 +488,8 @@ input, textarea, select { font-size: 16px; }
 .form-group textarea { min-height: 100px; resize: vertical; }
 .btn-group { display: flex; gap: 12px; margin-top: 24px; }
 .btn { padding: 12px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; border: none; display: inline-flex; align-items: center; gap: 8px; }
-.btn-primary { background: linear-gradient(135deg, var(--turquesa), var(--azul-medio)); color: white; }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(29,188,176,0.4); }
+.btn-primary { background: linear-gradient(135deg, var(--turquesa), var(--azul-medio)); box-shadow: var(--sombra-turquesa); color: white; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(29,188,176,0.4), var(--brilho-topo); }
 .btn-secondary { background: var(--cinza-claro); color: var(--texto); border: 1.5px solid var(--borda); }
 .btn-secondary:hover { background: var(--borda); }
 .btn-danger { background: #fee2e2; color: var(--cor-erro); border: 1.5px solid #fecaca; }
@@ -519,7 +568,7 @@ input, textarea, select { font-size: 16px; }
 /* MODAL */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
 .modal-overlay.active { display: flex; }
-.modal-content { background: white; border-radius: var(--radius); padding: 32px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,0.3); animation: fadeInUp 0.3s ease; }
+.modal-content { background: white; border-radius: var(--radius); padding: 32px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,0.3), var(--brilho-topo); animation: fadeInUp 0.3s ease; }
 .modal-content h2 { font-family: 'Oswald', sans-serif; font-size: 22px; color: var(--azul-escuro); margin-bottom: 20px; }
 .modal-close { float: right; width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--cinza-claro); cursor: pointer; color: var(--cinza); transition: var(--transition); display: flex; align-items: center; justify-content: center; }
 .modal-close:hover { background: var(--cor-erro); color: white; }
@@ -857,7 +906,7 @@ body.dark-mode .search-result-item .sr-title { color: #e6f7f6; }
 /* AJUSTE DE FOTO DE PERFIL (Identidade oficial Canopus) */
 .photo-crop-overlay { position: fixed; inset: 0; background: rgba(0,51,73,0.78); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
 .photo-crop-overlay.show { display: flex; }
-.photo-crop-modal { background: #ffffff; border-radius: 16px; padding: 24px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 25px 80px rgba(0,0,0,0.35); animation: fadeInUp 0.3s ease; }
+.photo-crop-modal { background: #ffffff; border-radius: 16px; padding: 24px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 25px 80px rgba(0,0,0,0.35), var(--brilho-topo); animation: fadeInUp 0.3s ease; }
 .photo-crop-modal h3 { font-family: 'Oswald', sans-serif; font-size: 18px; color: #003349; margin-bottom: 4px; }
 .photo-crop-modal p { font-size: 12px; color: #5a6b7c; margin-bottom: 16px; }
 .photo-crop-area { width: 280px; height: 280px; max-width: 100%; margin: 0 auto 16px; position: relative; overflow: hidden; border-radius: 50%; border: 3px solid #2CD5C4; background: #003349; cursor: grab; touch-action: none; }
@@ -1572,6 +1621,9 @@ img, iframe, video, svg { max-width: 100%; }
             <div class="nav-item" data-page="admin-materiais" onclick="navigateTo('admin-materiais')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();navigateTo('admin-materiais')}" id="nav-admin-materiais">
                 <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 7.5A1.5 1.5 0 0 1 5 6h4l2 2h8a1.5 1.5 0 0 1 1.5 1.5v.3H6.8a1.5 1.5 0 0 0-1.4 1L3.5 16.5z"/><path d="M3.5 7.5 5 18.4A1.5 1.5 0 0 0 6.5 19.7H19a1.5 1.5 0 0 0 1.4-1L22 11.3H6.8a1.5 1.5 0 0 0-1.4 1.1L3.5 18"/></svg> Gerenciar Materiais
             </div>
+            <div class="nav-item" data-page="admin-treinamentos-unic" onclick="navigateTo('admin-treinamentos-unic')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();navigateTo('admin-treinamentos-unic')}" id="nav-admin-treinamentos-unic">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 5-5 2 2-5z"/></svg> Gerenciar Onboarding
+            </div>
         </div>
     </nav>
 
@@ -1588,14 +1640,6 @@ img, iframe, video, svg { max-width: 100%; }
     <div class="top-bar">
         <div style="display:flex;align-items:center;gap:12px"><button id="mobile-menu-btn" onclick="toggleMobileSidebar()" style="display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--azul-escuro)" aria-label="Menu"><svg class="toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><div class="breadcrumb"><span id="breadcrumbText">Dashboard</span></div></div>
         <div class="top-actions">
-            <button class="top-btn hidden" id="mobileSearchBtn" onclick="toggleMobileSearch()" aria-label="Buscar" title="Buscar" >
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg>
-            </button>
-            <div class="search-box">
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg>
-                <input type="text" placeholder="Buscar conteúdo..." id="searchInput" autocomplete="off" oninput="searchContent(this.value)" onkeydown="searchKeydown(event)" aria-label="Buscar conteúdo na plataforma">
-                <div class="search-results" id="searchResults" role="listbox"></div>
-            </div>
             <button class="top-btn" onclick="toggleNotifications()" title="Notificações" aria-label="Notificações">
                 <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3.5c-3 0-5 2.2-5 5.5v3.5l-1.8 3h13.6l-1.8-3V9c0-3.3-2-5.5-5-5.5z"/><path d="M9.5 18.5a2.5 2.5 0 0 0 5 0"/></svg>
                 <span id="notifBadge" class="notif-badge"></span>
@@ -1806,9 +1850,9 @@ img, iframe, video, svg { max-width: 100%; }
                         onkeydown="searchKeydown(event)"
                         autocomplete="off"
                         aria-label="Buscar resposta para o cliente"
-                        style="width:100%;height:56px;padding:0 20px 0 50px;font-size:16px;border:2px solid var(--borda);border-radius:14px;background:var(--branco);color:var(--texto);outline:none;transition:border-color .2s;box-sizing:border-box;"
-                        onfocus="this.style.borderColor='var(--turquesa)'"
-                        onblur="this.style.borderColor='var(--borda)'">
+                        style="width:100%;height:56px;padding:0 20px 0 50px;font-size:16px;border:2px solid var(--borda);border-radius:14px;background:var(--branco);color:var(--texto);outline:none;transition:border-color .2s, box-shadow .2s;box-sizing:border-box;box-shadow:var(--sombra-input);"
+                        onfocus="this.style.borderColor='var(--turquesa)';this.style.boxShadow='var(--sombra-input-focus)'"
+                        onblur="this.style.borderColor='var(--borda)';this.style.boxShadow='var(--sombra-input)'">
                 </div>
                 <!-- Resultados do dashboard — controlado por display, não classe -->
                 <div id="dashboardSearchResults" class="search-results-dropdown" style="display:none;position:absolute;top:60px;left:0;right:0;z-index:300;background:var(--branco);border:1.5px solid var(--borda);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.12);max-height:420px;overflow-y:auto;"></div>
@@ -2723,6 +2767,81 @@ img, iframe, video, svg { max-width: 100%; }
 
     <!-- FOOTER -->
     
+        <!-- ==================== ADMIN: GERENCIAR ONBOARDING (TREINAMENTOS UNIC) ==================== -->
+        <div class="page-section" id="page-admin-treinamentos-unic">
+            <div class="page-header">
+                <span class="badge"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v6c0 4.5-3 7.5-7 8.5-4-1-7-4-7-8.5V6z"/></svg> Administrador</span>
+                <h1>Gerenciar Onboarding</h1>
+                <p>Crie, edite ou remova os cards de treinamento exibidos na trilha de Onboarding. As mudanças aparecem para todos os colaboradores assim que salvas.</p>
+            </div>
+
+            <div class="admin-panel active u-mb18-11">
+                <h2 id="unic-form-titulo"><svg class="ico ico-tq" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Novo treinamento</h2>
+                <input type="hidden" id="unic-id">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;">
+                    <div>
+                        <label for="unic-titulo" class="field-label">Título</label>
+                        <input id="unic-titulo" type="text" placeholder="Ex.: Boas-vindas ao Relacionamento" class="field-input">
+                    </div>
+                    <div>
+                        <label for="unic-categoria" class="field-label">Categoria</label>
+                        <input id="unic-categoria" type="text" placeholder="Ex.: Integração" class="field-input">
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label for="unic-descricao" class="field-label">Descrição</label>
+                        <input id="unic-descricao" type="text" placeholder="Uma ou duas frases sobre o conteúdo do treinamento" class="field-input">
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label for="unic-url" class="field-label">Link do curso na UNIC</label>
+                        <input id="unic-url" type="url" placeholder="https://auth.mobiliza.com.br/?service=..." class="field-input">
+                        <div style="font-size:11.5px;color:var(--texto-leve);margin-top:4px;">O botão do card leva a pessoa direto para esse link, igual aos treinamentos que já existem.</div>
+                    </div>
+                    <div>
+                        <label for="unic-icone" class="field-label">Ícone</label>
+                        <select id="unic-icone" class="field-input">
+                            <option value="fa-graduation-cap">Formatura (padrão)</option>
+                            <option value="fa-hand-sparkles">Boas-vindas</option>
+                            <option value="fa-sitemap">Organograma</option>
+                            <option value="fa-heart">Cultura</option>
+                            <option value="fa-book-open">Guia</option>
+                            <option value="fa-user-shield">Compliance</option>
+                            <option value="fa-headset">Atendimento</option>
+                            <option value="fa-chart-line">Resultados</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="unic-cor" class="field-label">Cor do card</label>
+                        <select id="unic-cor" class="field-input">
+                            <option value="turquesa">Turquesa</option>
+                            <option value="azul">Azul</option>
+                            <option value="verde">Verde</option>
+                            <option value="laranja">Laranja</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="unic-ordem" class="field-label">Ordem de exibição</label>
+                        <input id="unic-ordem" type="number" min="1" value="1" class="field-input">
+                    </div>
+                    <div style="display:flex;align-items:flex-end;">
+                        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--azul-escuro);cursor:pointer;">
+                            <input id="unic-ativo" type="checkbox" checked style="width:16px;height:16px;"> Visível para os colaboradores
+                        </label>
+                    </div>
+                </div>
+                <div style="margin-top:18px;display:flex;justify-content:flex-end;gap:10px;">
+                    <button id="unic-btn-cancelar" class="hidden" onclick="unicAdminCancelarEdicao()" style="padding:11px 20px;background:none;border:1.5px solid var(--borda);border-radius:10px;font-size:13px;font-weight:700;color:var(--texto-leve);cursor:pointer;font-family:'Inter',sans-serif;">Cancelar edição</button>
+                    <button class="btn-primary" onclick="unicAdminSalvar()" style="padding:11px 24px;border-radius:10px;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:'Inter',sans-serif;">Salvar treinamento</button>
+                </div>
+            </div>
+
+            <div class="admin-panel active">
+                <h2><svg class="ico ico-tq" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 5-5 2 2-5z"/></svg>Treinamentos cadastrados</h2>
+                <div id="unic-admin-lista" style="margin-top:14px;">
+                    <div style="text-align:center;padding:24px;color:var(--cinza);font-size:13px;">Carregando...</div>
+                </div>
+            </div>
+        </div>
+
         <!-- ==================== TRILHA: ONBOARDING GERAL ==================== -->
         <div class="page-section" id="page-trilha-onboarding">
             <div class="page-header">
@@ -3433,7 +3552,25 @@ function showApp() {
     document.getElementById('userInfoPanel').style.display = 'block';
     loadNotifications();
     recordLogin();
-    checkAchievements();
+    // Colaborador avaliado: busca a nota/conquistas reais do Supabase já no login
+    // (antes, isso só acontecia ao navegar para o Dashboard ou para a tela 5 Estrelas,
+    // por isso a Galeria de Conquistas ficava "Carregando..." até o usuário trocar de tela).
+    // Também liga o canal de tempo real aqui, para a nota do avaliador chegar na hora
+    // mesmo que o colaborador nunca saia do Dashboard.
+    if (currentUser && currentUser.avaliado && currentRole === 'user') {
+        if (typeof carregar5EstrelasSupabase === 'function') {
+            carregar5EstrelasSupabase().then(function() {
+                checkAchievements();
+            }).catch(function() {
+                checkAchievements();
+            });
+        } else {
+            checkAchievements();
+        }
+        if (typeof iniciarRealtime5E === 'function') setTimeout(iniciarRealtime5E, 1500);
+    } else {
+        checkAchievements();
+    }
     // Dashboard inteligente: saudação, exemplos, mural
     if (typeof renderDashSaudacao === 'function') renderDashSaudacao();
     // Mural da equipe removido do produto (não fazia sentido manter)
@@ -3486,7 +3623,7 @@ function showApp() {
             if (mainMenu) mainMenu.style.display = 'block';
             if (adminMenu) adminMenu.style.display = 'block';
             // Admin vê tudo no menu principal
-            ['nav-gestor','nav-cinco-estrelas'].forEach(function(id){
+            ['nav-gestor','nav-cinco-estrelas','nav-admin-treinamentos-unic'].forEach(function(id){
                 var el=document.getElementById(id); if(el) el.style.display='flex';
             });
 
@@ -3544,15 +3681,13 @@ function showApp() {
         } else if (currentRole === 'admin-juridico-contratos' || currentRole === 'admin-juridico-credito') {
             roleEl.className = 'user-role admin';
             if (mainMenu) mainMenu.style.display = 'block';
-            // Veem trilha jurídico + painel da equipe + gerenciar materiais
+            // Veem trilha jurídico + painel da equipe
             var gEl = document.getElementById('nav-gestor');
             if (gEl) { gEl.style.display = 'flex'; gEl.innerHTML = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9" r="2.4"/><path d="M2.8 19.5c.9-3.2 3.1-5 5.7-5s4.8 1.8 5.7 5"/><path d="M15 15c2.1.2 3.7 1.8 4.4 4.3"/></svg> Minha Equipe'; gEl.setAttribute('onclick',"navigateTo('gestor')"); }
             if (adminMenu) {
-                ['admin-dashboard','admin-content','admin-users'].forEach(function(pid){
+                ['admin-dashboard','admin-content','admin-users','admin-treinamentos-unic'].forEach(function(pid){
                     var el=adminMenu.querySelector('[data-page="'+pid+'"]'); if(el) el.style.display='none';
                 });
-                var matEl = adminMenu.querySelector('[data-page="admin-materiais"]');
-                if (matEl) matEl.style.display = 'flex';
                 adminMenu.style.display = 'block';
             }
 
@@ -3561,11 +3696,9 @@ function showApp() {
             roleEl.className = 'user-role admin';
             if (mainMenu) mainMenu.style.display = 'block';
             if (adminMenu) {
-                ['admin-dashboard','admin-content','admin-users'].forEach(function(pid){
+                ['admin-dashboard','admin-content','admin-users','admin-treinamentos-unic'].forEach(function(pid){
                     var el=adminMenu.querySelector('[data-page="'+pid+'"]'); if(el) el.style.display='none';
                 });
-                var matEl = adminMenu.querySelector('[data-page="admin-materiais"]');
-                if (matEl) matEl.style.display = 'flex';
                 adminMenu.style.display = 'block';
             }
 
@@ -3720,11 +3853,140 @@ function renderTreinamentosUnic() {
     grid.innerHTML = html;
 }
 
-// Carga futura via Supabase — a interface não muda.
-// async function carregarTreinamentosUnic() {
-//     var res = await supabaseClient.from('treinamentos_unic').select('*').eq('ativo', true).order('ordem');
-//     if (!res.error && res.data) { window._treinamentosCache = res.data; renderTreinamentosUnic(); }
-// }
+// Carga real via Supabase — a interface não muda, só a origem dos dados.
+async function carregarTreinamentosUnic() {
+    try {
+        if (!supabaseClient) initSupabase();
+        if (!supabaseClient) { renderTreinamentosUnic(); return; }
+        var res = await supabaseClient.from('treinamentos_unic').select('*').eq('ativo', true).order('ordem');
+        if (!res.error && res.data) { window._treinamentosCache = res.data; }
+    } catch (e) {
+        console.warn('Treinamentos UNIC: erro ao carregar do Supabase, usando lista local.', e.message);
+    }
+    renderTreinamentosUnic();
+}
+
+// ==================== ADMIN: GERENCIAR ONBOARDING (treinamentos_unic) ====================
+// Carrega TODOS os treinamentos (inclusive os inativos) para a tela de administração.
+async function unicAdminCarregar() {
+    var box = document.getElementById('unic-admin-lista');
+    if (!box) return;
+    box.innerHTML = '<div style="text-align:center;padding:24px;color:var(--cinza);font-size:13px;">Carregando...</div>';
+    try {
+        if (!supabaseClient) initSupabase();
+        if (!supabaseClient) throw new Error('sem conexão com o Supabase');
+        var res = await supabaseClient.from('treinamentos_unic').select('*').order('ordem');
+        if (res.error) throw res.error;
+        window._treinamentosAdminCache = res.data || [];
+        unicAdminRenderLista();
+    } catch (e) {
+        box.innerHTML = '<div style="text-align:center;color:#DC2626;padding:20px;font-size:13px;">Erro ao carregar: ' + escapeHtml(e.message) + '</div>';
+    }
+}
+
+function unicAdminRenderLista() {
+    var box = document.getElementById('unic-admin-lista');
+    if (!box) return;
+    var lista = (window._treinamentosAdminCache || []).slice().sort(function(a, b) { return (a.ordem || 0) - (b.ordem || 0); });
+    if (!lista.length) {
+        box.innerHTML = '<div style="text-align:center;padding:20px;color:var(--cinza);font-size:13px;">Nenhum treinamento cadastrado ainda. Use o formulário acima.</div>';
+        return;
+    }
+    var html = '';
+    lista.forEach(function(t) {
+        html += '<div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid var(--borda);">'
+            + '<div style="display:flex;align-items:center;gap:12px;min-width:0;">'
+            + '<div class="card-icon-main ' + (t.cor || 'turquesa') + '" style="width:36px;height:36px;flex-shrink:0;">' + svgIcon(t.icone || 'fa-graduation-cap') + '</div>'
+            + '<div style="min-width:0;">'
+            + '<div style="font-weight:600;color:var(--azul-escuro);font-size:13.5px;">' + escapeHtml(t.titulo || '') + (t.ativo === false ? ' <span style="font-size:10px;font-weight:700;color:var(--cinza);background:var(--cinza-claro);padding:2px 8px;border-radius:50px;margin-left:4px;">oculto</span>' : '') + '</div>'
+            + '<div style="font-size:11.5px;color:var(--texto-leve);">' + escapeHtml(t.categoria || 'Sem categoria') + ' · ordem ' + (t.ordem || 0) + '</div>'
+            + '</div></div>'
+            + '<div style="display:flex;gap:8px;flex-shrink:0;">'
+            + '<button onclick="unicAdminEditar(\'' + t.id + '\')" style="font-size:12px;color:var(--turquesa-texto);font-weight:600;cursor:pointer;background:none;border:none;font-family:\'Inter\',sans-serif;">editar</button>'
+            + '<button onclick="unicAdminExcluir(\'' + t.id + '\',\'' + escapeHtml(t.titulo || '').replace(/'/g, "\\'") + '\')" style="font-size:12px;color:#DC2626;font-weight:600;cursor:pointer;background:none;border:none;font-family:\'Inter\',sans-serif;">excluir</button>'
+            + '</div></div>';
+    });
+    box.innerHTML = html;
+}
+
+async function unicAdminSalvar() {
+    var id = document.getElementById('unic-id').value;
+    var titulo = document.getElementById('unic-titulo').value.trim();
+    var url = document.getElementById('unic-url').value.trim();
+    if (!titulo) { showNotification('Preencha o título do treinamento.', 'error'); return; }
+    if (!url) { showNotification('Cole o link do curso na UNIC.', 'error'); return; }
+
+    var registro = {
+        titulo: titulo,
+        descricao: document.getElementById('unic-descricao').value.trim(),
+        categoria: document.getElementById('unic-categoria').value.trim(),
+        url_unic: url,
+        icone: document.getElementById('unic-icone').value,
+        cor: document.getElementById('unic-cor').value,
+        ordem: parseInt(document.getElementById('unic-ordem').value, 10) || 0,
+        ativo: document.getElementById('unic-ativo').checked
+    };
+
+    try {
+        if (!supabaseClient) initSupabase();
+        if (!supabaseClient) { showNotification('Sem conexão com o Supabase nesta sessão.', 'error'); return; }
+        var res;
+        if (id) {
+            res = await supabaseClient.from('treinamentos_unic').update(registro).eq('id', id);
+        } else {
+            res = await supabaseClient.from('treinamentos_unic').insert(registro);
+        }
+        if (res.error) { showNotification('Erro ao salvar: ' + res.error.message, 'error'); return; }
+        showNotification(id ? 'Treinamento atualizado com sucesso!' : 'Treinamento criado com sucesso!', 'success');
+        unicAdminCancelarEdicao();
+        unicAdminCarregar();
+    } catch (e) {
+        showNotification('Erro ao salvar: ' + e.message, 'error');
+    }
+}
+
+function unicAdminEditar(id) {
+    var t = (window._treinamentosAdminCache || []).find(function(x) { return String(x.id) === String(id); });
+    if (!t) return;
+    document.getElementById('unic-id').value = t.id;
+    document.getElementById('unic-titulo').value = t.titulo || '';
+    document.getElementById('unic-descricao').value = t.descricao || '';
+    document.getElementById('unic-categoria').value = t.categoria || '';
+    document.getElementById('unic-url').value = t.url_unic || '';
+    document.getElementById('unic-icone').value = t.icone || 'fa-graduation-cap';
+    document.getElementById('unic-cor').value = t.cor || 'turquesa';
+    document.getElementById('unic-ordem').value = t.ordem || 1;
+    document.getElementById('unic-ativo').checked = t.ativo !== false;
+    document.getElementById('unic-form-titulo').innerHTML = '<svg class="ico ico-tq" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Editando: ' + escapeHtml(t.titulo || '');
+    document.getElementById('unic-btn-cancelar').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function unicAdminCancelarEdicao() {
+    document.getElementById('unic-id').value = '';
+    ['unic-titulo', 'unic-descricao', 'unic-categoria', 'unic-url'].forEach(function(id) {
+        var el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.getElementById('unic-icone').value = 'fa-graduation-cap';
+    document.getElementById('unic-cor').value = 'turquesa';
+    document.getElementById('unic-ordem').value = 1;
+    document.getElementById('unic-ativo').checked = true;
+    document.getElementById('unic-form-titulo').innerHTML = '<svg class="ico ico-tq" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Novo treinamento';
+    document.getElementById('unic-btn-cancelar').classList.add('hidden');
+}
+
+async function unicAdminExcluir(id, titulo) {
+    if (!confirm('Remover o treinamento "' + titulo + '"? Ele deixa de aparecer para todos os colaboradores.')) return;
+    try {
+        if (!supabaseClient) initSupabase();
+        var res = await supabaseClient.from('treinamentos_unic').delete().eq('id', id);
+        if (res.error) { showNotification('Erro ao excluir: ' + res.error.message, 'error'); return; }
+        showNotification('Treinamento removido.', 'success');
+        unicAdminCarregar();
+    } catch (e) {
+        showNotification('Erro ao excluir: ' + e.message, 'error');
+    }
+}
 
 function navigateTo(page) {
     // Route protection - check auth
@@ -3735,7 +3997,7 @@ function navigateTo(page) {
 
     // Admin route protection
     var _isSubAdmin = currentRole && currentRole.startsWith('admin-');
-    const adminPages = ['admin-dashboard', 'admin-content', 'admin-users'];
+    const adminPages = ['admin-dashboard', 'admin-content', 'admin-users', 'admin-treinamentos-unic'];
     if (adminPages.includes(page) && currentRole !== 'admin') {
         navigateTo('dashboard');
         return;
@@ -3806,9 +4068,16 @@ function navigateTo(page) {
         loadModuleContent(moduleId);
     }
 
-    // Close mobile sidebar
-    document.getElementById('sidebar').classList.remove('open');
-    document.querySelector('.overlay').classList.remove('show');
+    // Close mobile sidebar (fecha o menu E os dois overlays de fundo — o antigo
+    // '.overlay' e o '#mobile-overlay' mais novo. Antes só o primeiro era limpo aqui,
+    // então no celular, depois de tocar num item do menu, uma camada escura ficava
+    // presa por cima da tela até o usuário tocar nela de novo.)
+    if (typeof closeMobileSidebar === 'function') {
+        closeMobileSidebar();
+    } else {
+        document.getElementById('sidebar').classList.remove('open');
+        document.querySelector('.overlay').classList.remove('show');
+    }
 
     // Update nav active state
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -3892,7 +4161,9 @@ function navigateTo(page) {
         setTimeout(function(){ matRenderizarModulo('modulo-5','mat-grid-mod5'); }, 150);
     } else if (page === 'trilha-onboarding') {
         // Onboarding é apenas direcionamento para a UNIC — sem progresso nem bloqueios
-        renderTreinamentosUnic();
+        carregarTreinamentosUnic();
+    } else if (page === 'admin-treinamentos-unic') {
+        if (typeof unicAdminCarregar === 'function') setTimeout(unicAdminCarregar, 100);
     } else if (page === 'central-conhecimento') {
         loadCentralConhecimento();
     }
@@ -3930,7 +4201,8 @@ function updateBreadcrumb(page) {
         'central-conhecimento': 'Central de Conhecimento',
         'admin-users': 'Gerenciar usuários',
         'cinco-estrelas': 'Atendimento 5 Estrelas',
-        'avaliador-5e': 'Lançar Notas 5 Estrelas'
+        'avaliador-5e': 'Lançar Notas 5 Estrelas',
+        'admin-treinamentos-unic': 'Gerenciar Onboarding'
     };
     document.getElementById('breadcrumbText').textContent = names[page] || 'Dashboard';
 }
@@ -4101,9 +4373,9 @@ function updateDashboard() {
             FAIXAS.forEach(function(f) {
                 if (f.ativa && notaAtual !== null) {
                     // Faixa ativa: painel de destaque (hero escuro), igual em todas as faixas
-                    htmlZ2 += '<div style="grid-column:span 1;background:var(--azul-escuro);border-radius:14px;padding:20px;position:relative;overflow:hidden;color:#fff;">'
+                    htmlZ2 += '<div style="grid-column:span 1;background:var(--azul-escuro);border-radius:14px;padding:20px;position:relative;overflow:hidden;color:#fff;box-shadow:var(--sombra-elev-hover),var(--brilho-topo);">'
                         + '<span style="display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;color:' + f.corIcone + ';background:' + f.corIcone + '22;padding:4px 10px;border-radius:50px;margin-bottom:14px;">SUA FAIXA ATUAL</span>'
-                        + '<div style="width:38px;height:38px;border-radius:10px;background:' + f.corIcone + '33;display:flex;align-items:center;justify-content:center;margin-bottom:12px;">'
+                        + '<div style="width:38px;height:38px;border-radius:10px;background:' + f.corIcone + '33;box-shadow:inset 0 1px 1px rgba(255,255,255,0.25),0 3px 6px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">'
                         + svgIcon(f.icon, '', 'style="font-size:17px;color:' + f.corIcone + ';"') + '</div>'
                         + '<div style="font-family:\'Oswald\',sans-serif;font-size:34px;font-weight:700;color:#fff;line-height:1;">' + notaAtual.toFixed(2).replace('.', ',') + '</div>'
                         + '<div style="font-size:12px;color:rgba(255,255,255,.75);margin-top:4px;">' + f.label + ' — sua nota atual</div>'
@@ -5644,7 +5916,10 @@ function buildSearchIndex() {
                 title: a.empreendimento || '',
                 sub: a.administradora || 'Administradora',
                 icon: 'fa-building',
-                text: normalizeText((a.empreendimento || '') + ' ' + (a.administradora || '') + ' administradora condominio'),
+                text: normalizeText((a.empreendimento || '') + ' ' + (a.administradora || '') + ' administradora condominio'
+                    + ' ' + ((a.contatos && a.contatos.length) ? a.contatos.map(function(c){return c.valor;}).join(' ') : ((a.telefone||'') + ' ' + (a.email||'')))
+                    + ' ' + ((a.sindicos && a.sindicos.length) ? a.sindicos.map(function(s){return s.nome;}).join(' ') : (a.sindico_nome||''))
+                    + ' ' + (a.banco_financiador || '') + ' ' + (a.assessoria || '') + ' ' + (a.endereco || '') + ' ' + (a.bairro || '')),
                 resposta: (a.administradora ? a.administradora + ' — ' : '') + (a.telefone || '') + (a.email ? ' · ' + a.email : ''),
                 admId: a.id
             });
@@ -6276,9 +6551,14 @@ function montarBaseConhecimento() {
     if (window._admCache && window._admCache.length) {
         window._admCache.forEach(function(a) {
             var cts = (a.contatos && a.contatos.length) ? a.contatos.map(function(c){return c.tipo+': '+c.valor;}).join('; ') : ((a.telefone||'') + ' ' + (a.email||''));
+            var sindTxt = (a.sindicos && a.sindicos.length)
+                ? a.sindicos.map(function(s){ return s.nome + (s.telefone ? ' - Tel: '+s.telefone : '') + (s.email ? ' - E-mail: '+s.email : ''); }).join('; ')
+                : (a.sindico_nome ? a.sindico_nome + (a.sindico_telefone?' - Tel: '+a.sindico_telefone:'') + (a.sindico_email?' - E-mail: '+a.sindico_email:'') : '');
             partes.push('EMPREENDIMENTO: ' + (a.empreendimento||'')
+                + (a.bairro ? ' (' + a.bairro + ')' : '')
                 + '\nAdministradora: ' + (a.administradora||'') + ' (' + cts + ')'
-                + (a.sindico_nome ? '\nSíndico(a): ' + a.sindico_nome + (a.sindico_telefone?' - Tel: '+a.sindico_telefone:'') + (a.sindico_email?' - E-mail: '+a.sindico_email:'') : '')
+                + (a.endereco ? '\nEndereço: ' + a.endereco : '')
+                + (sindTxt ? '\nSíndico(a): ' + sindTxt : '')
                 + (a.banco_financiador ? '\nBanco financiador: ' + a.banco_financiador : '')
                 + (a.assessoria ? '\nAssessoria: ' + a.assessoria : ''));
         });
@@ -6354,6 +6634,14 @@ async function perguntarAoFarol(pergunta) {
     box.style.display = 'block';
     box.classList.add('show');
 
+    // Atualiza o cache de FAQ/Empreendimentos antes de perguntar — sem isso, um
+    // empreendimento cadastrado recentemente (ou nesta mesma sessão) podia
+    // ficar de fora da busca até a pessoa visitar a tela de Empreendimentos
+    // pelo menos uma vez, já que o cache carregava só uma vez no login.
+    if (typeof precarregarBaseBusca === 'function') {
+        try { await precarregarBaseBusca(); } catch (_e) { /* segue com o que já tinha em cache */ }
+    }
+
     try {
         if (!supabaseClient) throw { categoria: 'rede', friendly: 'O assistente está temporariamente indisponível. Use os resultados da busca ou consulte os casos de atendimento.', detalhe: 'Sem conexão com o Supabase (supabaseClient não inicializado).' };
         var res = await supabaseClient.functions.invoke('pergunte-ao-farol', {
@@ -6385,7 +6673,7 @@ async function perguntarAoFarol(pergunta) {
 
         // Registra a consulta ANTES de desenhar o card, porque os botões de
         // feedback precisam do id da linha salva pra saber o que atualizar.
-        var consultaId = await registrarConsultaIA(pergunta);
+        var consultaId = await registrarConsultaIA(pergunta, resposta);
 
         box.innerHTML = '<div style="padding:0;">'
             + '<div style="display:flex;align-items:center;gap:10px;padding:14px 20px;background:linear-gradient(135deg,var(--turquesa),var(--azul-medio));border-radius:12px 12px 0 0;">'
@@ -6402,8 +6690,8 @@ async function perguntarAoFarol(pergunta) {
             + (consultaId ? (
                 '<div class="farol-feedback" style="display:flex;align-items:center;gap:8px;">'
                 + '<span style="font-size:11.5px;color:var(--texto-leve);">Essa resposta ajudou?</span>'
-                + '<button onclick="enviarFeedbackIA(' + consultaId + ',\'positivo\',this)" title="Ajudou" style="background:none;border:1.5px solid var(--borda);border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:14px;line-height:1;">👍</button>'
-                + '<button onclick="enviarFeedbackIA(' + consultaId + ',\'negativo\',this)" title="Não ajudou" style="background:none;border:1.5px solid var(--borda);border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:14px;line-height:1;">👎</button>'
+                + '<button onclick="enviarFeedbackIA(event,\'' + consultaId + '\',\'positivo\',this)" title="Ajudou" style="background:none;border:1.5px solid var(--borda);border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:14px;line-height:1;">👍</button>'
+                + '<button onclick="enviarFeedbackIA(event,\'' + consultaId + '\',\'negativo\',this)" title="Não ajudou" style="background:none;border:1.5px solid var(--borda);border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:14px;line-height:1;">👎</button>'
                 + '</div>'
             ) : '')
             + '</div>'
@@ -6415,6 +6703,57 @@ async function perguntarAoFarol(pergunta) {
         var categoria = e && e.categoria || 'desconhecido';
         var friendly = (e && e.friendly) || 'O assistente inteligente ainda não está disponível. Use os resultados da busca ou consulte os casos de atendimento.';
         var detalhe = (e && e.detalhe) || (e && e.message) || 'Erro desconhecido';
+        console.error('[Pergunte ao Farol][' + categoria + ']', detalhe);
+
+        // A IA (Gemini) falhou ou ficou sem cota — mas a resposta pode já existir
+        // na base real do Farol (FAQ/Empreendimentos no Supabase). Em vez de só
+        // avisar e mandar a pessoa procurar em outra tela, busca aqui mesmo por
+        // palavra-chave e mostra o que encontrar, pra continuar funcionando.
+        // A IA (Gemini) falhou ou ficou sem cota — mas talvez já exista uma
+        // resposta que a própria IA gerou antes, pra uma pergunta parecida.
+        // Reaproveitar essa resposta não gasta token nenhum, e a pessoa recebe
+        // um texto de verdade "escrito", não só uma lista de resultados.
+        var respostaCacheada = await buscarRespostaIACacheada(pergunta);
+        if (respostaCacheada) {
+            box.innerHTML = '<div style="padding:0;">'
+                + '<div style="display:flex;align-items:center;gap:10px;padding:14px 20px;background:linear-gradient(135deg,var(--turquesa),var(--azul-medio));border-radius:12px 12px 0 0;">'
+                + '<div style="width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + svgIcon('fa-lightbulb', '', 'style="width:17px;height:17px;color:#fff;"') + '</div>'
+                + '<div><div style="font-size:13.5px;font-weight:700;color:#fff;">Assistente do Farol</div>'
+                + '<div style="font-size:10.5px;color:rgba(255,255,255,.82);text-transform:uppercase;letter-spacing:.04em;">Resposta reaproveitada de uma pergunta parecida</div></div>'
+                + '</div>'
+                + '<div style="padding:18px 20px 4px;">' + formatarRespostaFarol(respostaCacheada) + '</div>'
+                + '<div style="font-size:11px;color:var(--cinza);margin:12px 20px 0;padding-top:12px;border-top:1px solid var(--borda);">'
+                + 'O assistente de IA está temporariamente indisponível. Esta resposta foi gerada anteriormente para uma dúvida parecida.'
+                + '</div>'
+                + '<div style="padding:12px 20px 16px;"><button onclick="clearSearchAll()" style="padding:8px 18px;background:var(--cinza-claro);border:1.5px solid var(--borda);border-radius:8px;font-size:12px;color:var(--texto-leve);cursor:pointer;font-family:\'Inter\',sans-serif;">Fechar</button></div>'
+                + '</div>';
+            return;
+        }
+
+        // Sem resposta cacheada da IA também — cai pra busca crua no FAQ/Empreendimentos.
+        var fallback = buscarRespostaLocalFallback(pergunta);
+        if (fallback.length) {
+            var htmlFb = '<div style="padding:0;">'
+                + '<div style="display:flex;align-items:center;gap:10px;padding:14px 20px;background:var(--cinza-claro);border-bottom:1px solid var(--borda);border-radius:12px 12px 0 0;">'
+                + svgIcon('fa-circle-info', '', 'style="color:var(--cinza);flex-shrink:0;"')
+                + '<div style="font-size:12px;color:var(--texto-leve);line-height:1.5;">O assistente de IA está indisponível no momento. Encontramos isto na base de conhecimento:</div>'
+                + '</div>';
+            fallback.forEach(function(r) {
+                // Resposta completa, direto aqui — sem cortar texto e sem precisar
+                // clicar/navegar pra outra tela pra ver o resto, igual o Gemini já faz.
+                htmlFb += '<div style="padding:14px 20px;border-bottom:1px solid var(--borda);">'
+                    + '<div style="display:flex;align-items:center;gap:8px;width:100%;">' + svgIcon(r.icon, '', 'style="color:var(--turquesa);flex-shrink:0;"')
+                    + '<div style="font-size:13.5px;font-weight:700;color:var(--azul-escuro);">' + escapeHtml(r.title) + '</div></div>'
+                    + '<div style="font-size:12.5px;color:var(--texto-leve);line-height:1.6;padding-left:26px;margin-top:4px;">' + escapeHtml(r.resposta || '') + '</div>'
+                    + '<div style="padding-left:26px;margin-top:6px;">'
+                    + '<a href="#" onclick="openSearchResult(\'' + escapeHtml(r.target) + '\');return false;" style="font-size:11.5px;color:var(--turquesa-texto);font-weight:600;text-decoration:none;">Ver ficha completa</a>'
+                    + '</div>'
+                    + '</div>';
+            });
+            htmlFb += '<div style="padding:10px 20px 14px;"><button onclick="clearSearchAll()" style="padding:8px 18px;background:var(--cinza-claro);border:1.5px solid var(--borda);border-radius:8px;font-size:12px;color:var(--texto-leve);cursor:pointer;font-family:\'Inter\',sans-serif;">Fechar</button></div></div>';
+            box.innerHTML = htmlFb;
+            return;
+        }
 
         box.innerHTML = '<div style="padding:18px 20px;">'
             + '<div style="font-size:13px;color:var(--texto-leve);line-height:1.6;">'
@@ -6422,14 +6761,74 @@ async function perguntarAoFarol(pergunta) {
             + escapeHtml(friendly)
             + ' Consulte os <a href="#" onclick="clearSearchAll();navigateTo(\'respostas-faq\');return false;" style="color:var(--turquesa-texto);font-weight:600;">casos de atendimento</a> enquanto isso.'
             + '</div></div>';
-        console.error('[Pergunte ao Farol][' + categoria + ']', detalhe);
     }
+}
+
+// Reaproveita respostas que a IA já gerou antes para perguntas parecidas —
+// funciona mesmo sem token, porque não chama o Gemini de novo, só relê o que
+// já foi salvo em consultas_realizadas. Prioriza respostas que receberam 👍.
+async function buscarRespostaIACacheada(pergunta) {
+    try {
+        if (!supabaseClient) return null;
+        var res = await supabaseClient.from('consultas_realizadas')
+            .select('termo_buscado, resposta_gerada, feedback')
+            .not('resposta_gerada', 'is', null)
+            .order('consultado_em', { ascending: false })
+            .limit(200);
+        if (res.error || !res.data || !res.data.length) return null;
+
+        var termos = normalizeText(pergunta || '').split(/\s+/).filter(Boolean);
+        if (!termos.length) return null;
+
+        var melhor = null, melhorScore = 0;
+        res.data.forEach(function(row) {
+            if (!row.resposta_gerada) return;
+            var textoTermo = normalizeText(row.termo_buscado || '');
+            var pontos = 0;
+            termos.forEach(function(t) { if (textoTermo.indexOf(t) !== -1) pontos++; });
+            if (pontos === 0) return;
+            // Precisa bater pelo menos metade dos termos digitados — evita reaproveitar
+            // uma resposta de um assunto só parecido de longe.
+            if (pontos < Math.ceil(termos.length / 2)) return;
+            if (row.feedback === 'positivo') pontos += 2;
+            if (row.feedback === 'negativo') pontos -= 3;
+            if (pontos > melhorScore) { melhorScore = pontos; melhor = row.resposta_gerada; }
+        });
+        return melhor;
+    } catch (e) {
+        console.warn('[Farol][cache IA] erro ao buscar:', e.message);
+        return null;
+    }
+}
+
+// Busca de reserva sem IA — usa o mesmo índice da busca normal (FAQ e
+// Empreendimentos vindos do Supabase) pra continuar respondendo mesmo se o
+// Gemini estiver fora do ar ou sem cota de tokens.
+function buscarRespostaLocalFallback(pergunta) {
+    var q = normalizeText(pergunta || '');
+    if (!q) return [];
+    // Palavras com 3 letras ou menos (a, o, do, da, de, qual, etc.) aparecem em
+    // quase todo texto e só empatam a pontuação — só as palavras mais
+    // específicas (nome do prédio, "centro", "adm"...) devem valer ponto.
+    var termos = q.split(/\s+/).filter(function(t) { return t.length > 3; });
+    if (!termos.length) termos = q.split(/\s+/).filter(Boolean);
+    var idx = buildSearchIndex().filter(function(item) {
+        return (item.tipo === 'Perguntas Frequentes' || item.tipo === 'Empreendimentos') && item.resposta;
+    });
+    var scored = [];
+    idx.forEach(function(item) {
+        var pontos = 0;
+        termos.forEach(function(t) { if (item.text.indexOf(t) !== -1) pontos++; });
+        if (pontos > 0) scored.push({ item: item, score: pontos });
+    });
+    scored.sort(function(a, b) { return b.score - a.score; });
+    return scored.slice(0, 6).map(function(s) { return s.item; });
 }
 
 // Registra a consulta e devolve o id da linha salva — precisamos desse id
 // depois, se a pessoa clicar em 👍/👎, pra saber exatamente qual consulta
 // está recebendo o feedback.
-async function registrarConsultaIA(pergunta) {
+async function registrarConsultaIA(pergunta, respostaGerada) {
     try {
         if (!supabaseClient || !currentUser) { console.warn('[Farol][feedback] sem supabaseClient ou currentUser'); return null; }
         var sess = await supabaseClient.auth.getSession();
@@ -6438,6 +6837,7 @@ async function registrarConsultaIA(pergunta) {
             colaborador_id: sess.data.session.user.id,
             termo_buscado: pergunta,
             resultado_alvo: 'IA_FAROL',
+            resposta_gerada: respostaGerada || null,
             consultado_em: new Date().toISOString()
         }).select('id').single();
         if (res.error) {
@@ -6462,7 +6862,8 @@ async function registrarConsultaIA(pergunta) {
 
 // Salva o 👍/👎 na mesma linha da consulta original. "Fire-and-forget" —
 // não trava a interface esperando confirmação do servidor.
-function enviarFeedbackIA(consultaId, tipo, botaoEl) {
+function enviarFeedbackIA(ev, consultaId, tipo, botaoEl) {
+    if (ev && ev.stopPropagation) ev.stopPropagation();
     if (!consultaId || !supabaseClient) return;
     var container = botaoEl.closest('.farol-feedback');
     if (container) {
